@@ -1,0 +1,18 @@
+{
+  "domains": [
+    "github.com",
+    "raw.githubusercontent.com",
+    "objects.githubusercontent.com",
+    "api.github.com",
+    "models.githubusercontent.com",
+    "npmjs.org",
+    "registry.npmjs.org",
+    "nodejs.org",
+    "dl.google.com",
+    "microsoft.com",
+    "aka.ms",
+    "huggingface.co",
+    "cdn-lfs.huggingface.co",
+    "ollama.com"
+  ]
+}

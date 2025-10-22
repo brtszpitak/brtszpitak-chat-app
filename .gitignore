@@ -1,0 +1,10 @@
+﻿node_modules/
+dist/
+out/
+build/
+releases/
+logs/
+*.log
+.vite/
+*.map
+.DS_Store

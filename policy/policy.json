@@ -1,0 +1,20 @@
+{
+  "mode": "conservative",
+  "download": {
+    "httpsOnly": true,
+    "maxBytes": 1073741824,
+    "headTimeoutMs": 120000,
+    "readTimeoutMs": 1800000,
+    "maxRedirects": 5,
+    "rateLimitPerHost": 3,
+    "requireChecksumForExecutables": true
+  },
+  "exec": {
+    "allowOnlyFromDownloads": true,
+    "requireVerifiedSource": true
+  },
+  "budgets": {
+    "maxToolCallsPerGoal": 50,
+    "maxDiskMBPerGoal": 2048
+  }
+}

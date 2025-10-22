@@ -1,0 +1,37 @@
+﻿{
+    "name":  "alice-chat-app",
+    "version":  "1.0.0",
+    "description":  "Project Alice - local AI assistant with Ollama and persistent memory (file store)",
+    "private":  true,
+    "type":  "module",
+    "main":  "src/desktop/main.cjs",
+    "scripts":  {
+                    "start":  "node ./src/server/index.js",
+                    "dev":  "concurrently \"cross-env VITE_PORT=5174 vite\" \"node ./src/server/index.js\" \"electron .\"",
+                    "build":  "vite build",
+                    "client":  "cd client \u0026\u0026 npm run dev",
+                    "server":  "node server/index.js",
+                    "desktop":  "electron .",
+                    "smoke":  "node ./tests/smoke.js"
+                },
+    "dependencies":  {
+                         "express":  "^4.21.2",
+                         "react":  "^19.2.0",
+                         "react-dom":  "^19.2.0",
+                         "socket.io":  "^4.8.1",
+                         "socket.io-client":  "^4.8.1"
+                     },
+    "devDependencies":  {
+                            "@vitejs/plugin-react":  "^5.0.4",
+                            "concurrently":  "^9.2.1",
+                            "cross-env":  "^10.1.0",
+                            "electron":  "^38.4.0",
+                            "nodemon":  "^3.1.0",
+                            "vite":  "^7.1.11"
+                        },
+    "engines":  {
+                    "node":  "\u003e=22.0.0"
+                },
+    "author":  "Bartosz Pietak",
+    "license":  "MIT"
+}

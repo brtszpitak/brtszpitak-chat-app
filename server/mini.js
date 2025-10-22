@@ -1,0 +1,5 @@
+﻿const express = require("express");
+const app = express();
+console.log("ENTRY:", __filename);
+app.get("/health", (_req, res) => res.type("text/plain").send("ok-mini"));
+app.listen(3001, () => console.log("mini listening on :3001"));
