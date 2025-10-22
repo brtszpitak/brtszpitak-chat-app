@@ -4,7 +4,7 @@ out/
 build/
 releases/
 logs/
-*.log
 .vite/
+*.log
 *.map
 .DS_Store

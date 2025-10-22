@@ -1,8 +1,13 @@
-﻿import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+﻿import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
+
 export default defineConfig({
+  root: path.resolve(__dirname, "src/desktop/renderer"),
   plugins: [react()],
-  root: 'src/desktop/renderer',
-  build: { outDir: '../../../dist', emptyOutDir: true },
-  server: { port: Number(process.env.VITE_PORT) || 5174, strictPort: true, host: true }
+  server: { port: 5174, strictPort: true },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true
+  }
 });
