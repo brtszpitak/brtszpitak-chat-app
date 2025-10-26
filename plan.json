@@ -1,113 +1,148 @@
 {
-  "version": 1,
-  "tasks": [
-    {
-      "id": "w1",
-      "title": "Write hello",
-      "action": "write",
-      "rel": "sandbox/hello.txt",
-      "content": "hi",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:17:20.179Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "e1",
-      "title": "Node version",
-      "action": "exec",
-      "cmd": "node -v",
-      "status": "failed",
-      "history": [
-        {
-          "ts": "2025-10-26T17:17:20.208Z",
-          "note": "failed: Error: exec non-zero exit: -4058"
-        }
-      ]
-    },
-    {
-      "id": "d1",
-      "title": "Grab robots",
-      "action": "download",
-      "url": "https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:17:20.615Z",
-          "note": "failed: Error: download HTTP 403"
-        },
-        {
-          "ts": "2025-10-26T17:43:17.757Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "t1",
-      "status": "done",
-      "action": "write",
-      "rel": "sandbox/test.txt",
-      "title": "Write test",
-      "content": "autonomy ok",
-      "history": [
-        {
-          "ts": "2025-10-26T17:22:11.163Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "cmd": "node -v",
-      "title": "Echo version",
-      "status": "done",
-      "id": "t2",
-      "action": "exec",
-      "history": [
-        {
-          "ts": "2025-10-26T17:22:11.188Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "readme",
-      "status": "done",
-      "action": "write",
-      "rel": "README.md",
-      "title": "Seed README",
-      "content": "# Chat App\\n\\nBootstrapped by Alice autonomy.\\n",
-      "history": [
-        {
-          "ts": "2025-10-26T17:43:25.400Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "git-add",
-      "args": [
-        "add",
-        "-A"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git add",
-      "status": "todo"
-    },
-    {
-      "id": "git-commit",
-      "args": [
-        "commit",
-        "-m",
-        "chore: seed readme"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git commit",
-      "status": "todo"
-    }
-  ]
+    "version":  1,
+    "tasks":  [
+                  {
+                      "id":  "w1",
+                      "title":  "Write hello",
+                      "action":  "write",
+                      "rel":  "sandbox/hello.txt",
+                      "content":  "hi",
+                      "status":  "done",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:17:20.179Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "e1",
+                      "title":  "Node version",
+                      "action":  "exec",
+                      "cmd":  "node -v",
+                      "status":  "failed",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:17:20.208Z",
+                                          "note":  "failed: Error: exec non-zero exit: -4058"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "d1",
+                      "title":  "Grab robots",
+                      "action":  "download",
+                      "url":  "https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
+                      "status":  "done",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:17:20.615Z",
+                                          "note":  "failed: Error: download HTTP 403"
+                                      },
+                                      {
+                                          "ts":  "2025-10-26T17:43:17.757Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "t1",
+                      "status":  "done",
+                      "action":  "write",
+                      "rel":  "sandbox/test.txt",
+                      "title":  "Write test",
+                      "content":  "autonomy ok",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:22:11.163Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "cmd":  "node -v",
+                      "title":  "Echo version",
+                      "status":  "done",
+                      "id":  "t2",
+                      "action":  "exec",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:22:11.188Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "readme",
+                      "status":  "done",
+                      "action":  "write",
+                      "rel":  "README.md",
+                      "title":  "Seed README",
+                      "content":  "# Chat App\\n\\nBootstrapped by Alice autonomy.\\n",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:43:25.400Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "git-add",
+                      "args":  [
+                                   "add",
+                                   "-A"
+                               ],
+                      "cmd":  "git",
+                      "action":  "exec",
+                      "title":  "git add",
+                      "status":  "done",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:43:25.512Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "git-commit",
+                      "args":  [
+                                   "commit",
+                                   "-m",
+                                   "chore: seed readme"
+                               ],
+                      "cmd":  "git",
+                      "action":  "exec",
+                      "title":  "git commit",
+                      "status":  "done",
+                      "history":  [
+                                      {
+                                          "ts":  "2025-10-26T17:43:25.611Z",
+                                          "note":  "done"
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  "git-add",
+                      "args":  [
+                                   "add",
+                                   "-A"
+                               ],
+                      "cmd":  "git",
+                      "action":  "exec",
+                      "title":  "git add",
+                      "status":  "todo"
+                  },
+                  {
+                      "id":  "git-commit",
+                      "args":  [
+                                   "commit",
+                                   "-m",
+                                   "chore: initial autonomy seed"
+                               ],
+                      "cmd":  "git",
+                      "action":  "exec",
+                      "title":  "git commit",
+                      "status":  "todo"
+                  }
+              ]
 }
