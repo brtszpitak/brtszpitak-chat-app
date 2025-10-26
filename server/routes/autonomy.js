@@ -75,7 +75,7 @@ async function parseNdjsonStream(res) {
 async function runDownload(task, signal) {
   const body = { url: task.url };
   if (task.expectedSha256) body.expectedSha256 = task.expectedSha256;
-  const res = await postJSON(`http://localhost:${PORT}/download`, body, signal);
+  const res = await postJSON(`http://127.0.0.1:${PORT}/download`, body, signal);
   if (!res.ok) throw new Error(`download HTTP ${res.status}`);
   const data = await res.json();
   if (!data.ok) throw new Error(`download failed: ${data.error||"unknown"}`);
@@ -91,7 +91,7 @@ async function runExec(task, signal) {
     args = parts;
   }
   const body = { cmd, args, cwd: task.cwd || "." };
-  const res = await postJSON(`http://localhost:${PORT}/exec`, body, signal);
+  const res = await postJSON(`http://127.0.0.1:${PORT}/exec`, body, signal);
   if (!res.ok) throw new Error(`exec HTTP ${res.status}`);
   const events = await parseNdjsonStream(res);
   const exit = events.find(e=>e.type==="exit")?.code ?? null;
@@ -190,7 +190,7 @@ router.post("/loop", async (req, res) => {
   const { max = 50 } = req.body || {};
   const run = [];
   for (let i=0; i<max; i++){
-    const r = await (await fetch(`http://localhost:${PORT}/autonomy/tick`, { method:"POST" })).json();
+    const r = await (await fetch(`http://127.0.0.1:${PORT}/autonomy/tick`, { method:"POST" })).json();
     run.push(r);
     if (r.status === "idle") break;
   }
@@ -198,3 +198,6 @@ router.post("/loop", async (req, res) => {
 });
 
 export default router;
+
+
+

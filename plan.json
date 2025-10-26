@@ -2,215 +2,54 @@
   "version": 1,
   "tasks": [
     {
-      "id": "w1",
-      "title": "Write hello",
-      "action": "write",
-      "rel": "sandbox/hello.txt",
-      "content": "hi",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:17:20.179Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "e1",
-      "title": "Node version",
+      "id": "deps-server",
+      "title": "npm ci (server)",
       "action": "exec",
-      "cmd": "node -v",
-      "status": "failed",
-      "history": [
-        {
-          "ts": "2025-10-26T17:17:20.208Z",
-          "note": "failed: Error: exec non-zero exit: -4058"
-        }
-      ]
-    },
-    {
-      "id": "d1",
-      "title": "Grab robots",
-      "action": "download",
-      "url": "https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:17:20.615Z",
-          "note": "failed: Error: download HTTP 403"
-        },
-        {
-          "ts": "2025-10-26T17:43:17.757Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "t1",
-      "status": "done",
-      "action": "write",
-      "rel": "sandbox/test.txt",
-      "title": "Write test",
-      "content": "autonomy ok",
-      "history": [
-        {
-          "ts": "2025-10-26T17:22:11.163Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "cmd": "node -v",
-      "title": "Echo version",
-      "status": "done",
-      "id": "t2",
-      "action": "exec",
-      "history": [
-        {
-          "ts": "2025-10-26T17:22:11.188Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "readme",
-      "status": "done",
-      "action": "write",
-      "rel": "README.md",
-      "title": "Seed README",
-      "content": "# Chat App\\n\\nBootstrapped by Alice autonomy.\\n",
-      "history": [
-        {
-          "ts": "2025-10-26T17:43:25.400Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "git-add",
+      "cmd": "cmd.exe",
       "args": [
-        "add",
-        "-A"
+        "/c",
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "ci",
+        "--silent",
+        "--no-fund",
+        "--no-audit",
+        "--progress=false"
       ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git add",
+      "cwd": "D:\\Alice\\projects\\chat-app\\server",
+      "timeoutMs": 1800000,
       "status": "done",
       "history": [
         {
-          "ts": "2025-10-26T17:43:25.512Z",
+          "ts": "2025-10-26T19:54:06.968Z",
           "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "git-commit",
-      "args": [
-        "commit",
-        "-m",
-        "chore: seed readme"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git commit",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:43:25.611Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "git-add",
-      "args": [
-        "add",
-        "-A"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git add",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:48:37.266Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "git-commit",
-      "args": [
-        "commit",
-        "-m",
-        "chore: initial autonomy seed"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git commit",
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T17:48:37.322Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "deps-app",
-      "args": [
-        "i"
-      ],
-      "cmd": "npm",
-      "action": "exec",
-      "title": "npm i app deps",
-      "status": "failed",
-      "history": [
-        {
-          "ts": "2025-10-26T17:49:49.938Z",
-          "note": "failed: Error: exec non-zero exit: -4058"
         }
       ]
     },
     {
       "id": "smoke",
-      "args": [
-        "run",
-        "smoke"
-      ],
-      "cmd": "npm",
-      "action": "exec",
       "title": "npm run smoke",
-      "status": "failed",
+      "action": "exec",
+      "cmd": "cmd.exe",
+      "args": [
+        "/c",
+        "C:\\Program Files\\nodejs\\npm.cmd",
+        "run",
+        "smoke",
+        "--silent"
+      ],
+      "cwd": "D:\\Alice\\projects\\chat-app\\server",
+      "timeoutMs": 180000,
+      "status": "done",
       "history": [
         {
-          "ts": "2025-10-26T17:49:49.942Z",
-          "note": "failed: Error: exec non-zero exit: -4058"
+          "ts": "2025-10-26T19:54:07.600Z",
+          "note": "done"
+        },
+        {
+          "ts": "2025-10-26T19:54:15.153Z",
+          "note": "done"
         }
       ]
-    },
-    {
-      "id": "git-add-all",
-      "args": [
-        "add",
-        "-A"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git add -A",
-      "status": "todo"
-    },
-    {
-      "id": "git-commit",
-      "args": [
-        "commit",
-        "-m",
-        "chore: snapshot 2025-10-26T17:49:49"
-      ],
-      "cmd": "git",
-      "action": "exec",
-      "title": "git commit snapshot",
-      "status": "todo"
     }
   ]
 }
