@@ -1,34 +1,113 @@
-﻿{
-  "name": "overnight-desktop-with-voice-and-autonomy",
+{
+  "version": 1,
   "tasks": [
-
-    // --- install deps (idempotent) ---
-    { "kind": "cmd", "cmd": "npm i react react-dom socket.io socket.io-client express cors" },
-    { "kind": "cmd", "cmd": "npm i -D electron vite concurrently cross-env @vitejs/plugin-react" },
-
-    // --- desktop main (Electron, dev->Vite, prod->dist) ---
-    { "kind": "write", "rel": "src/desktop/main.cjs", "content": "// Electron main (CJS)\nconst { app, BrowserWindow, shell } = require('electron');\nconst path = require('path');\nconst isDev = !app.isPackaged;\nconst PORT = process.env.VITE_PORT || 5174;\nasync function createWindow(){\n  const win = new BrowserWindow({ width: 1100, height: 720, webPreferences: { preload: path.join(__dirname,'preload.cjs') } });\n  if (isDev){ await win.loadURL(`http://localhost:${PORT}/`); win.webContents.openDevTools({ mode:'detach' }); }\n  else { await win.loadFile(path.join(__dirname,'../../dist/index.html')); }\n  win.webContents.setWindowOpenHandler(({url}) => { shell.openExternal(url); return { action:'deny' }; });\n}\napp.whenReady().then(createWindow);\napp.on('window-all-closed', ()=>{ if (process.platform!=='darwin') app.quit(); });\n" },
-
-    // --- desktop preload (expose minimal api) ---
-    { "kind": "write", "rel": "src/desktop/preload.cjs", "content": "const { contextBridge } = require('electron');\ncontextBridge.exposeInMainWorld('AliceBridge', {\n  version: '1.0.0'\n});\n" },
-
-    // --- renderer index.html ---
-    { "kind": "write", "rel": "src/desktop/renderer/index.html", "content": "<!doctype html><html><head><meta charset='utf-8'/><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Alice Desktop</title></head><body><div id='root'></div><script type='module' src='/main.jsx'></script></body></html>" },
-
-    // --- renderer main.jsx ---
-    { "kind": "write", "rel": "src/desktop/renderer/main.jsx", "content": "import React from 'react';\nimport { createRoot } from 'react-dom/client';\nimport App from './App.jsx';\ncreateRoot(document.getElementById('root')).render(<App/>);\n" },
-
-    // --- renderer App.jsx: chat + voice (TTS/STS stubs) + file drop + avatar + socket ping ---
-    { "kind": "write", "rel": "src/desktop/renderer/App.jsx", "content": "import React, { useEffect, useRef, useState } from 'react';\nimport { io } from 'socket.io-client';\n\nexport default function App(){\n  const [log, setLog] = useState(['Hello from Alice Desktop']);\n  const [text, setText] = useState('');\n  const socketRef = useRef(null);\n  const recognizingRef = useRef(false);\n  const recogRef = useRef(null);\n\n  // Socket.IO to backend (ping/pong + future events)\n  useEffect(()=>{\n    const s = io('http://localhost:3001', { transports:['websocket','polling'] });\n    socketRef.current = s;\n    s.on('connect', ()=> setLog(l=>[...l, `connected: ${s.id}`]));\n    s.on('pong',    (msg)=> setLog(l=>[...l, `pong: ${msg}`]));\n    s.on('disconnect', ()=> setLog(l=>[...l, 'disconnected']));\n    return ()=> s.disconnect();\n  },[]);\n\n  // TTS (SpeechSynthesis)\n  function speak(t){\n    try{ const u = new SpeechSynthesisUtterance(t); speechSynthesis.cancel(); speechSynthesis.speak(u); }catch{ /* ignore */ }\n  }\n\n  // STT (Web Speech API, best-effort)\n  function toggleMic(){\n    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;\n    if(!SR){ setLog(l=>[...l,'(no speech recognition available)']); return; }\n    if(!recognizingRef.current){\n      const r = new SR(); r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 1;\n      r.onresult = (e)=>{ const phrase = e.results?.[0]?.[0]?.transcript || ''; setText(phrase); setLog(l=>[...l, 'you (mic): '+phrase]); };\n      r.onerror  = (e)=> setLog(l=>[...l, 'mic error: '+ (e?.error||'')]);\n      r.onend    = ()=> { recognizingRef.current=false; };\n      recognizingRef.current = true; recogRef.current = r; r.start(); setLog(l=>[...l,'(mic) listening…']);\n    } else { try{ recogRef.current?.stop(); }catch{} recognizingRef.current=false; setLog(l=>[...l,'(mic) stopped']); }\n  }\n\n  // Simple /chat POST (non-streaming)\n  async function send(){\n    const msg = text.trim(); if(!msg) return;\n    setLog(l=>[...l, 'you: '+msg]); setText('');\n    try{\n      const res = await fetch('http://localhost:3001/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: msg, role:'user' })});\n      // the server replies NDJSON-ish; collect quickly\n      const txt = await res.text();\n      const assistant = txt.includes('OK') ? 'OK' : txt.slice(0,200);\n      setLog(l=>[...l, 'alice: '+assistant]);\n      speak(assistant);\n    }catch(e){ setLog(l=>[...l, 'chat error: '+e.message]); }\n  }\n\n  function doPing(){ socketRef.current?.emit('ping','hi-from-ui'); }\n\n  function onDrop(e){ e.preventDefault(); const files = [...(e.dataTransfer?.files||[])];\n    if(files.length===0){ return; }\n    setLog(l=>[...l, `dropped ${files.length} file(s): `+files.map(f=>f.name).join(', ')]);\n    // TODO: upload route (safe, repo-limited) — future plan step.\n  }\n\n  return (\n    <div style={{ fontFamily:'system-ui, sans-serif', padding:16, display:'grid', gap:12 }} onDragOver={e=>e.preventDefault()} onDrop={onDrop}>\n      <header style={{display:'flex', gap:12, alignItems:'center'}}>\n        <div style={{width:48,height:48,borderRadius:24,background:'#eef',display:'grid',placeItems:'center'}}>🙂</div>\n        <div>\n          <h2 style={{margin:0}}>Alice Desktop</h2>\n          <small>Chat · Voice · Files (drag & drop)</small>\n        </div>\n      </header>\n\n      <textarea rows=\"10\" readOnly value={log.join('\\n')} style={{ width:'100%', fontFamily:'ui-monospace, monospace' }} />\n\n      <div style={{ display:'flex', gap:8 }}>\n        <input value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); } }} placeholder='Type a message…' style={{ flex:1, padding:'8px 10px' }} />\n        <button onClick={send}>Send</button>\n        <button onClick={toggleMic}>🎤</button>\n        <button onClick={doPing}>Ping</button>\n        <button onClick={()=>{ speechSynthesis.cancel(); setLog([]); }}>Clear</button>\n      </div>\n\n      <p style={{opacity:.7}}>* Voice uses browser APIs inside Electron (best effort). Files are logged now; upload route is planned.</p>\n    </div>\n  );\n}\n" },
-
-    // --- keep a tiny README so future you knows how to run it quickly ---
-    { "kind": "write", "rel": "README_DESKTOP.md", "content": "# Alice Desktop (dev)\n\n- Start API server: `node ./src/server/index.cjs`\n- Start Vite (renderer): `set VITE_PORT=5174 && npx vite`\n- Start Electron: `npx electron .`\n\nTip: Use `npm run autonomy` to let Alice keep things up and commit periodically.\n" },
-
-    // --- final smoke + snapshot commit (quotes preserved by shell:true) ---
-    { "kind": "cmd", "cmd": "git add -A" },
-    { "kind": "cmd", "cmd": "git commit -m \"feat(desktop): chat+voice+files stub + wiring\"" },
-
-    // --- sanity: run smoke test so you see OK in console ---
-    { "kind": "cmd", "cmd": "npm run smoke" }
+    {
+      "id": "w1",
+      "title": "Write hello",
+      "action": "write",
+      "rel": "sandbox/hello.txt",
+      "content": "hi",
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T17:17:20.179Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "e1",
+      "title": "Node version",
+      "action": "exec",
+      "cmd": "node -v",
+      "status": "failed",
+      "history": [
+        {
+          "ts": "2025-10-26T17:17:20.208Z",
+          "note": "failed: Error: exec non-zero exit: -4058"
+        }
+      ]
+    },
+    {
+      "id": "d1",
+      "title": "Grab robots",
+      "action": "download",
+      "url": "https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T17:17:20.615Z",
+          "note": "failed: Error: download HTTP 403"
+        },
+        {
+          "ts": "2025-10-26T17:43:17.757Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "t1",
+      "status": "done",
+      "action": "write",
+      "rel": "sandbox/test.txt",
+      "title": "Write test",
+      "content": "autonomy ok",
+      "history": [
+        {
+          "ts": "2025-10-26T17:22:11.163Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "cmd": "node -v",
+      "title": "Echo version",
+      "status": "done",
+      "id": "t2",
+      "action": "exec",
+      "history": [
+        {
+          "ts": "2025-10-26T17:22:11.188Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "readme",
+      "status": "done",
+      "action": "write",
+      "rel": "README.md",
+      "title": "Seed README",
+      "content": "# Chat App\\n\\nBootstrapped by Alice autonomy.\\n",
+      "history": [
+        {
+          "ts": "2025-10-26T17:43:25.400Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "git-add",
+      "args": [
+        "add",
+        "-A"
+      ],
+      "cmd": "git",
+      "action": "exec",
+      "title": "git add",
+      "status": "todo"
+    },
+    {
+      "id": "git-commit",
+      "args": [
+        "commit",
+        "-m",
+        "chore: seed readme"
+      ],
+      "cmd": "git",
+      "action": "exec",
+      "title": "git commit",
+      "status": "todo"
+    }
   ]
 }
