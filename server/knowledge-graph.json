@@ -1,0 +1,4 @@
+{
+  "1": { "topic": "Conversational AI", "connections": { "2": true } },
+  "2": { "topic": "Knowledge Graph", "connections": { "1": true } }
+}

@@ -40,7 +40,9 @@ app.post("/chat", async (req, res) => {
   };
 
   const send = (obj) => {
-    try { res.write(JSON.stringify(obj) + "\n"); } catch (_) {}
+    try {
+      res.write(JSON.stringify(obj) + "\n");
+    } catch (_) {}
   };
 
   send({ type: "start", id: Date.now().toString() });

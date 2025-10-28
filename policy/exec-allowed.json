@@ -1,27 +1,21 @@
 {
-    "binaries":  [
-                     {
-                         "cmd":  "npm",
-                         "args":  ".*"
-                     },
-                     {
-                         "cmd":  "powershell",
-                         "args":  "-ExecutionPolicy Bypass -File .*"
-                     },
-                     {
-                         "cmd":  "tar",
-                         "args":  ".*"
-                     },
-                     {
-                         "args":  "^-v$",
-                         "cmd":  "node"
-                     }
-                 ],
-    "extensionsExecutable":  [
-                                 ".exe",
-                                 ".msi",
-                                 ".bat",
-                                 ".cmd",
-                                 ".ps1"
-                             ]
+  "binaries": [
+    {
+      "cmd": "npm",
+      "args": ".*"
+    },
+    {
+      "cmd": "powershell",
+      "args": "-ExecutionPolicy Bypass -File .*"
+    },
+    {
+      "cmd": "tar",
+      "args": ".*"
+    },
+    {
+      "args": "^-v$",
+      "cmd": "node"
+    }
+  ],
+  "extensionsExecutable": [".exe", ".msi", ".bat", ".cmd", ".ps1"]
 }

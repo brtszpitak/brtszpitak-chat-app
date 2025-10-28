@@ -40,7 +40,7 @@ export async function embed(text) {
   const res = await fetch(`${OLLAMA_BASE}/api/embeddings`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ model: EMBEDDING_MODEL, prompt: text })
+    body: JSON.stringify({ model: EMBEDDING_MODEL, prompt: text }),
   });
   if (!res.ok) {
     const t = await res.text().catch(() => "");
@@ -51,7 +51,9 @@ export async function embed(text) {
 }
 
 function cosineSim(a, b) {
-  let dot = 0, na = 0, nb = 0;
+  let dot = 0,
+    na = 0,
+    nb = 0;
   for (let i = 0; i < a.length && i < b.length; i++) {
     dot += a[i] * b[i];
     na += a[i] * a[i];
@@ -88,7 +90,7 @@ export async function add({ type = "note", text, source = "manual" }) {
     created_at: now,
     last_used_at: null,
     uses: 0,
-    embedding
+    embedding,
   };
   items.push(obj);
   await writeAll(items);
@@ -130,7 +132,7 @@ export async function importItems(items = []) {
           created_at: new Date().toISOString(),
           last_used_at: null,
           uses: 0,
-          embedding: emb
+          embedding: emb,
         };
       } else {
         const base = {
@@ -140,7 +142,7 @@ export async function importItems(items = []) {
           source: it.source || "manual-import",
           created_at: new Date().toISOString(),
           last_used_at: null,
-          uses: 0
+          uses: 0,
         };
         base.embedding = await embed(base.text).catch(() => null);
         return base;

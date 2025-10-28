@@ -20,7 +20,7 @@ async function writePlan(plan) {
 }
 
 function getNextTodo(plan) {
-  return plan.tasks.find(t => (t.status ?? "todo") === "todo");
+  return plan.tasks.find((t) => (t.status ?? "todo") === "todo");
 }
 
 router.post("/runOnce", async (_req, res) => {
@@ -32,7 +32,7 @@ router.post("/runOnce", async (_req, res) => {
 router.post("/plan/report", async (req, res) => {
   const { id, newStatus = "done", note } = req.body || {};
   const plan = await readPlan();
-  const t = plan.tasks.find(x => x.id === id);
+  const t = plan.tasks.find((x) => x.id === id);
   if (!t) return res.status(404).json({ ok: false, error: "Task not found" });
   t.status = newStatus;
   t.history = t.history || [];

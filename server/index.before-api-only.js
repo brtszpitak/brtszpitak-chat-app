@@ -14,7 +14,10 @@ const BASE_DIR = process.env.ALICE_BASE_DIR || path.resolve(__dirname, "..");
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
-app.use((req, _res, next) => { console.log(req.method, req.url); next(); });
+app.use((req, _res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 /* --- Helpers --- */
 function resolveSafe(relPath) {
@@ -69,7 +72,9 @@ app.post("/chat", async (req, res) => {
           if (evt.done === true) {
             res.write(JSON.stringify({ type: "done" }) + "\n");
           }
-        } catch { /* ignore non-JSON */ }
+        } catch {
+          /* ignore non-JSON */
+        }
       }
     }
   } catch (err) {
@@ -84,10 +89,13 @@ app.post("/fs/list", (req, res) => {
   try {
     const rel = (req.body && req.body.path) || ".";
     const full = resolveSafe(rel);
-    const items = fs.readdirSync(full, { withFileTypes: true })
-      .map(d => ({ name: d.name, type: d.isDirectory() ? "dir" : "file" }));
+    const items = fs
+      .readdirSync(full, { withFileTypes: true })
+      .map((d) => ({ name: d.name, type: d.isDirectory() ? "dir" : "file" }));
     res.json({ ok: true, base: BASE_DIR, path: rel, items });
-  } catch (e) { res.status(400).json({ ok: false, error: String(e) }); }
+  } catch (e) {
+    res.status(400).json({ ok: false, error: String(e) });
+  }
 });
 
 app.post("/fs/read", (req, res) => {
@@ -96,7 +104,9 @@ app.post("/fs/read", (req, res) => {
     const full = resolveSafe(rel);
     const content = fs.readFileSync(full, "utf8");
     res.json({ ok: true, path: rel, bytes: Buffer.byteLength(content, "utf8"), content });
-  } catch (e) { res.status(400).json({ ok: false, error: String(e) }); }
+  } catch (e) {
+    res.status(400).json({ ok: false, error: String(e) });
+  }
 });
 
 app.post("/fs/write", (req, res) => {
@@ -108,7 +118,9 @@ app.post("/fs/write", (req, res) => {
     fs.mkdirSync(path.dirname(full), { recursive: true });
     fs.writeFileSync(full, String(content), "utf8");
     res.json({ ok: true, path: rel, bytes: Buffer.byteLength(String(content), "utf8") });
-  } catch (e) { res.status(400).json({ ok: false, error: String(e) }); }
+  } catch (e) {
+    res.status(400).json({ ok: false, error: String(e) });
+  }
 });
 
 /* NDJSON exec: stdout/stderr/exit/done */
@@ -117,16 +129,25 @@ app.post("/exec", (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   try {
-    const cmd  = req.body && req.body.cmd;
-    const args = (req.body && Array.isArray(req.body.args)) ? req.body.args : [];
+    const cmd = req.body && req.body.cmd;
+    const args = req.body && Array.isArray(req.body.args) ? req.body.args : [];
     const cwdRel = (req.body && req.body.cwd) || ".";
-    if (!cmd) { res.write(JSON.stringify({ type: "error", message: "Missing 'cmd'." }) + "\n"); return res.end(); }
+    if (!cmd) {
+      res.write(JSON.stringify({ type: "error", message: "Missing 'cmd'." }) + "\n");
+      return res.end();
+    }
     const cwd = resolveSafe(cwdRel);
 
     const child = spawn(cmd, args, { cwd, env: process.env, shell: false });
-    child.stdout.on("data", (chunk) => res.write(JSON.stringify({ type: "stdout", data: chunk.toString() }) + "\n"));
-    child.stderr.on("data", (chunk) => res.write(JSON.stringify({ type: "stderr", data: chunk.toString() }) + "\n"));
-    child.on("error", (err) => res.write(JSON.stringify({ type: "error", message: String(err) }) + "\n"));
+    child.stdout.on("data", (chunk) =>
+      res.write(JSON.stringify({ type: "stdout", data: chunk.toString() }) + "\n")
+    );
+    child.stderr.on("data", (chunk) =>
+      res.write(JSON.stringify({ type: "stderr", data: chunk.toString() }) + "\n")
+    );
+    child.on("error", (err) =>
+      res.write(JSON.stringify({ type: "error", message: String(err) }) + "\n")
+    );
     child.on("close", (code) => {
       res.write(JSON.stringify({ type: "exit", code }) + "\n");
       res.write(JSON.stringify({ type: "done" }) + "\n");
@@ -142,10 +163,14 @@ app.post("/exec", (req, res) => {
 /* routes dump for sanity (plain text, no templates) */
 app.get("/__routes", (_req, res) => {
   const list = [];
-  const s = (app && app._router && app._router.stack) ? app._router.stack : [];
+  const s = app && app._router && app._router.stack ? app._router.stack : [];
   s.forEach(function (l) {
     if (l && l.route && l.route.path && l.route.methods) {
-      var methods = Object.keys(l.route.methods).map(function (m){return m.toUpperCase();}).join(",");
+      var methods = Object.keys(l.route.methods)
+        .map(function (m) {
+          return m.toUpperCase();
+        })
+        .join(",");
       list.push(methods + " " + l.route.path);
     }
   });

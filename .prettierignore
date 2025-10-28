@@ -1,0 +1,14 @@
+﻿# Ignore historical server snapshots and generated scripts
+server/index.before-*.js
+server/scripts/generated-*.cjs
+server/scripts/failed/
+
+# Build artifacts
+desktop-app/dist/
+releases/
+client/dist/
+node_modules/
+
+# ignore backup snapshots
+backups/
+

@@ -1,322 +1,302 @@
 {
-    "version":  1,
-    "tasks":  [
-                  {
-                      "id":  "smoke",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:49:49.942Z",
-                                          "note":  "failed: Error: exec non-zero exit: -4058"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:55:52.998Z",
-                                          "note":  "failed: Error: exec non-zero exit: -4058"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T18:07:38.230Z",
-                                          "note":  "failed: Timeout after 60000ms: exec:smoke"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T18:55:32.121Z",
-                                          "note":  "failed: Timeout after 180000ms: exec:smoke"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T19:40:05.897Z",
-                                          "note":  "failed: Timeout after 180000ms: exec:smoke"
-                                      }
-                                  ],
-                      "title":  "npm run smoke",
-                      "action":  "exec",
-                      "cmd":  "cmd.exe",
-                      "args":  [
-
-                               ],
-                      "cwd":  "server",
-                      "timeoutMs":  180000,
-                      "status":  "todo"
-                  },
-                  {
-                      "id":  "deps-server",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T19:05:32.127Z",
-                                          "note":  "failed: Timeout after 600000ms: exec:deps-server"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T19:47:02.027Z",
-                                          "note":  "failed: Error: exec non-zero exit: 3221225786"
-                                      }
-                                  ],
-                      "title":  "npm ci (server)",
-                      "action":  "exec",
-                      "cmd":  "cmd.exe",
-                      "args":  [
-
-                               ],
-                      "cwd":  "server",
-                      "timeoutMs":  1800000,
-                      "status":  "todo"
-                  },
-                  {
-                      "id":  "w1",
-                      "title":  "Write hello",
-                      "action":  "write",
-                      "rel":  "sandbox/hello.txt",
-                      "content":  "hi",
-                      "status":  "done",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:17:20.179Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "e1",
-                      "title":  "Node version",
-                      "action":  "exec",
-                      "cmd":  "node -v",
-                      "status":  "failed",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:17:20.208Z",
-                                          "note":  "failed: Error: exec non-zero exit: -4058"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "d1",
-                      "title":  "Grab robots",
-                      "action":  "download",
-                      "url":  "https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
-                      "status":  "done",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:17:20.615Z",
-                                          "note":  "failed: Error: download HTTP 403"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:43:17.757Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "t1",
-                      "status":  "done",
-                      "action":  "write",
-                      "rel":  "sandbox/test.txt",
-                      "title":  "Write test",
-                      "content":  "autonomy ok",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:22:11.163Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "cmd":  "node -v",
-                      "title":  "Echo version",
-                      "status":  "done",
-                      "id":  "t2",
-                      "action":  "exec",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:22:11.188Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "readme",
-                      "status":  "done",
-                      "action":  "write",
-                      "rel":  "README.md",
-                      "title":  "Seed README",
-                      "content":  "# Chat App\\n\\nBootstrapped by Alice autonomy.\\n",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:43:25.400Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "git-add",
-                      "args":  [
-                                   "add",
-                                   "-A"
-                               ],
-                      "cmd":  "git",
-                      "action":  "exec",
-                      "title":  "git add",
-                      "status":  "done",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:43:25.512Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "git-commit",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:43:25.611Z",
-                                          "note":  "done"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:55:52.963Z",
-                                          "note":  "failed: Error: exec non-zero exit: 1"
-                                      }
-                                  ],
-                      "title":  "git commit snapshot",
-                      "action":  "exec",
-                      "cmd":  "git",
-                      "args":  [
-
-                               ],
-                      "cwd":  ".",
-                      "status":  "failed"
-                  },
-                  {
-                      "id":  "git-add",
-                      "args":  [
-                                   "add",
-                                   "-A"
-                               ],
-                      "cmd":  "git",
-                      "action":  "exec",
-                      "title":  "git add",
-                      "status":  "done",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:48:37.266Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  },
-                  {
-                      "id":  "git-commit",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:48:37.322Z",
-                                          "note":  "done"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:55:52.989Z",
-                                          "note":  "failed: Error: exec non-zero exit: 1"
-                                      }
-                                  ],
-                      "title":  "git commit snapshot",
-                      "action":  "exec",
-                      "cmd":  "git",
-                      "args":  [
-
-                               ],
-                      "cwd":  ".",
-                      "status":  "failed"
-                  },
-                  {
-                      "id":  "deps-app",
-                      "action":  "exec",
-                      "title":  "npm ci (root)",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:49:49.938Z",
-                                          "note":  "failed: Error: exec non-zero exit: -4058"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:55:52.993Z",
-                                          "note":  "failed: Error: exec non-zero exit: -4058"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T18:06:37.820Z",
-                                          "note":  "failed: Timeout after 60000ms: exec:deps-app"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T18:46:41.981Z",
-                                          "note":  "failed: Timeout after 600000ms: exec:deps-app"
-                                      }
-                                  ],
-                      "cmd":  "cmd.exe",
-                      "args":  [
-
-                               ],
-                      "cwd":  ".",
-                      "status":  "failed",
-                      "timeoutMs":  600000
-                  },
-                  {
-                      "id":  "git-add-all",
-                      "args":  [
-
-                               ],
-                      "cmd":  "git",
-                      "action":  "exec",
-                      "title":  "git add -A",
-                      "status":  "failed",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:49:49.974Z",
-                                          "note":  "done"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:55:53.023Z",
-                                          "note":  "failed: Error: exec non-zero exit: 1"
-                                      }
-                                  ],
-                      "cwd":  "."
-                  },
-                  {
-                      "id":  "git-commit",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T17:49:50.030Z",
-                                          "note":  "done"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T17:55:53.047Z",
-                                          "note":  "failed: Error: exec non-zero exit: 1"
-                                      }
-                                  ],
-                      "title":  "git commit snapshot",
-                      "action":  "exec",
-                      "cmd":  "git",
-                      "args":  [
-
-                               ],
-                      "cwd":  ".",
-                      "status":  "failed"
-                  },
-                  {
-                      "id":  "deps-client",
-                      "title":  "npm ci (client)",
-                      "action":  "exec",
-                      "cmd":  "cmd.exe",
-                      "args":  [
-                                   "/c",
-                                   "npm",
-                                   "ci",
-                                   "--silent",
-                                   "--no-fund",
-                                   "--no-audit",
-                                   "--progress=false"
-                               ],
-                      "cwd":  "client",
-                      "timeoutMs":  1800000,
-                      "status":  "done",
-                      "history":  [
-                                      {
-                                          "ts":  "2025-10-26T19:24:38.503Z",
-                                          "note":  "failed: Timeout after 600000ms: exec:deps-client"
-                                      },
-                                      {
-                                          "ts":  "2025-10-26T19:32:17.974Z",
-                                          "note":  "done"
-                                      }
-                                  ]
-                  }
-              ]
+  "version": 1,
+  "tasks": [
+    {
+      "id": "smoke",
+      "history": [
+        {
+          "ts": "2025-10-26T17:49:49.942Z",
+          "note": "failed: Error: exec non-zero exit: -4058"
+        },
+        {
+          "ts": "2025-10-26T17:55:52.998Z",
+          "note": "failed: Error: exec non-zero exit: -4058"
+        },
+        {
+          "ts": "2025-10-26T18:07:38.230Z",
+          "note": "failed: Timeout after 60000ms: exec:smoke"
+        },
+        {
+          "ts": "2025-10-26T18:55:32.121Z",
+          "note": "failed: Timeout after 180000ms: exec:smoke"
+        },
+        {
+          "ts": "2025-10-26T19:40:05.897Z",
+          "note": "failed: Timeout after 180000ms: exec:smoke"
+        }
+      ],
+      "title": "npm run smoke",
+      "action": "exec",
+      "cmd": "cmd.exe",
+      "args": [],
+      "cwd": "server",
+      "timeoutMs": 180000,
+      "status": "todo"
+    },
+    {
+      "id": "deps-server",
+      "history": [
+        {
+          "ts": "2025-10-26T19:05:32.127Z",
+          "note": "failed: Timeout after 600000ms: exec:deps-server"
+        },
+        {
+          "ts": "2025-10-26T19:47:02.027Z",
+          "note": "failed: Error: exec non-zero exit: 3221225786"
+        }
+      ],
+      "title": "npm ci (server)",
+      "action": "exec",
+      "cmd": "cmd.exe",
+      "args": [],
+      "cwd": "server",
+      "timeoutMs": 1800000,
+      "status": "todo"
+    },
+    {
+      "id": "w1",
+      "title": "Write hello",
+      "action": "write",
+      "rel": "sandbox/hello.txt",
+      "content": "hi",
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T17:17:20.179Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "e1",
+      "title": "Node version",
+      "action": "exec",
+      "cmd": "node -v",
+      "status": "failed",
+      "history": [
+        {
+          "ts": "2025-10-26T17:17:20.208Z",
+          "note": "failed: Error: exec non-zero exit: -4058"
+        }
+      ]
+    },
+    {
+      "id": "d1",
+      "title": "Grab robots",
+      "action": "download",
+      "url": "https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore",
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T17:17:20.615Z",
+          "note": "failed: Error: download HTTP 403"
+        },
+        {
+          "ts": "2025-10-26T17:43:17.757Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "t1",
+      "status": "done",
+      "action": "write",
+      "rel": "sandbox/test.txt",
+      "title": "Write test",
+      "content": "autonomy ok",
+      "history": [
+        {
+          "ts": "2025-10-26T17:22:11.163Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "cmd": "node -v",
+      "title": "Echo version",
+      "status": "done",
+      "id": "t2",
+      "action": "exec",
+      "history": [
+        {
+          "ts": "2025-10-26T17:22:11.188Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "readme",
+      "status": "done",
+      "action": "write",
+      "rel": "README.md",
+      "title": "Seed README",
+      "content": "# Chat App\\n\\nBootstrapped by Alice autonomy.\\n",
+      "history": [
+        {
+          "ts": "2025-10-26T17:43:25.400Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "git-add",
+      "args": ["add", "-A"],
+      "cmd": "git",
+      "action": "exec",
+      "title": "git add",
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T17:43:25.512Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "git-commit",
+      "history": [
+        {
+          "ts": "2025-10-26T17:43:25.611Z",
+          "note": "done"
+        },
+        {
+          "ts": "2025-10-26T17:55:52.963Z",
+          "note": "failed: Error: exec non-zero exit: 1"
+        }
+      ],
+      "title": "git commit snapshot",
+      "action": "exec",
+      "cmd": "git",
+      "args": [],
+      "cwd": ".",
+      "status": "failed"
+    },
+    {
+      "id": "git-add",
+      "args": ["add", "-A"],
+      "cmd": "git",
+      "action": "exec",
+      "title": "git add",
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T17:48:37.266Z",
+          "note": "done"
+        }
+      ]
+    },
+    {
+      "id": "git-commit",
+      "history": [
+        {
+          "ts": "2025-10-26T17:48:37.322Z",
+          "note": "done"
+        },
+        {
+          "ts": "2025-10-26T17:55:52.989Z",
+          "note": "failed: Error: exec non-zero exit: 1"
+        }
+      ],
+      "title": "git commit snapshot",
+      "action": "exec",
+      "cmd": "git",
+      "args": [],
+      "cwd": ".",
+      "status": "failed"
+    },
+    {
+      "id": "deps-app",
+      "action": "exec",
+      "title": "npm ci (root)",
+      "history": [
+        {
+          "ts": "2025-10-26T17:49:49.938Z",
+          "note": "failed: Error: exec non-zero exit: -4058"
+        },
+        {
+          "ts": "2025-10-26T17:55:52.993Z",
+          "note": "failed: Error: exec non-zero exit: -4058"
+        },
+        {
+          "ts": "2025-10-26T18:06:37.820Z",
+          "note": "failed: Timeout after 60000ms: exec:deps-app"
+        },
+        {
+          "ts": "2025-10-26T18:46:41.981Z",
+          "note": "failed: Timeout after 600000ms: exec:deps-app"
+        }
+      ],
+      "cmd": "cmd.exe",
+      "args": [],
+      "cwd": ".",
+      "status": "failed",
+      "timeoutMs": 600000
+    },
+    {
+      "id": "git-add-all",
+      "args": [],
+      "cmd": "git",
+      "action": "exec",
+      "title": "git add -A",
+      "status": "failed",
+      "history": [
+        {
+          "ts": "2025-10-26T17:49:49.974Z",
+          "note": "done"
+        },
+        {
+          "ts": "2025-10-26T17:55:53.023Z",
+          "note": "failed: Error: exec non-zero exit: 1"
+        }
+      ],
+      "cwd": "."
+    },
+    {
+      "id": "git-commit",
+      "history": [
+        {
+          "ts": "2025-10-26T17:49:50.030Z",
+          "note": "done"
+        },
+        {
+          "ts": "2025-10-26T17:55:53.047Z",
+          "note": "failed: Error: exec non-zero exit: 1"
+        }
+      ],
+      "title": "git commit snapshot",
+      "action": "exec",
+      "cmd": "git",
+      "args": [],
+      "cwd": ".",
+      "status": "failed"
+    },
+    {
+      "id": "deps-client",
+      "title": "npm ci (client)",
+      "action": "exec",
+      "cmd": "cmd.exe",
+      "args": [
+        "/c",
+        "npm",
+        "ci",
+        "--silent",
+        "--no-fund",
+        "--no-audit",
+        "--progress=false"
+      ],
+      "cwd": "client",
+      "timeoutMs": 1800000,
+      "status": "done",
+      "history": [
+        {
+          "ts": "2025-10-26T19:24:38.503Z",
+          "note": "failed: Timeout after 600000ms: exec:deps-client"
+        },
+        {
+          "ts": "2025-10-26T19:32:17.974Z",
+          "note": "done"
+        }
+      ]
+    }
+  ]
 }

@@ -1,0 +1,3 @@
+{
+  "myCommands": ["echo Hello World!", "node --version"]
+}

@@ -1,13 +1,195 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+    <meta charset="utf-8" />
+    <title>Alice</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' http://127.0.0.1:3001; img-src 'self' data:; style-src 'self' 'unsafe-inline';"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #0e0f13;
+        color: #eaeaea;
+        font-family:
+          system-ui,
+          Segoe UI,
+          Arial;
+      }
+      header {
+        padding: 12px 16px;
+        border-bottom: 1px solid #222;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .badge {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #1f2937;
+      }
+      .ok {
+        background: #064e3b;
+      }
+      .err {
+        background: #4b1d1d;
+      }
+      .wrap {
+        display: flex;
+        gap: 20px;
+        padding: 16px;
+      }
+      .avatar {
+        width: 240px;
+        height: 240px;
+        background: #111;
+        border: 1px solid #222;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .face {
+        width: 160px;
+        height: 160px;
+        border-radius: 80px;
+        background: #1b1f2a;
+        position: relative;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.35) inset;
+      }
+      .eye {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #eaeaea;
+        position: absolute;
+        top: 55px;
+      }
+      .eye.l {
+        left: 45px;
+      }
+      .eye.r {
+        right: 45px;
+      }
+      .mouth {
+        width: 60px;
+        height: 12px;
+        border-radius: 6px;
+        background: #eaeaea;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 40px;
+        transition:
+          height 0.08s,
+          width 0.08s;
+      }
+      .mouth.open {
+        height: 28px;
+        width: 72px;
+        border-radius: 14px;
+      }
+      .panel {
+        flex: 1;
+        border: 1px solid #222;
+        border-radius: 16px;
+        padding: 16px;
+      }
+      button {
+        background: #1f2937;
+        color: #eaeaea;
+        border: 1px solid #334155;
+        padding: 8px 12px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #273449;
+      }
+      code {
+        background: #111827;
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <header>
+      <div><strong>Alice</strong> — Desktop</div>
+      <div id="status" class="badge">status: …</div>
+    </header>
+    <div class="wrap">
+      <div class="avatar">
+        <div class="face">
+          <div class="eye l"></div>
+          <div class="eye r"></div>
+          <div id="mouth" class="mouth"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <p><strong>Controls</strong></p>
+        <p>Press <code>F9</code> to toggle Push-to-Talk.</p>
+        <p>
+          <button id="btnTest">Say hello</button>
+          <button id="btnPing">Ping backend</button>
+        </p>
+        <pre id="log" style="white-space: pre-wrap"></pre>
+      </div>
+    </div>
+
+    <script>
+      const statusEl = document.getElementById('status');
+      const mouth = document.getElementById('mouth');
+      const logEl = document.getElementById('log');
+
+      function setStatus(ok, text) {
+        statusEl.textContent = text;
+        statusEl.className = 'badge ' + (ok ? 'ok' : 'err');
+      }
+
+      async function ping() {
+        try {
+          const r = await fetch('http://127.0.0.1:3001/health');
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          setStatus(true, 'connected ✓');
+          log('health ok');
+        } catch (e) {
+          setStatus(false, 'backend offline');
+          log('health failed: ' + e.message);
+        }
+      }
+
+      function log(s) {
+        logEl.textContent += s + '\\n';
+      }
+
+      // Simple TTS using system voices
+      function speak(text) {
+        const u = new SpeechSynthesisUtterance(text);
+        const mouths = setInterval(() => mouth.classList.toggle('open'), 90);
+        u.onend = () => {
+          clearInterval(mouths);
+          mouth.classList.remove('open');
+        };
+        speechSynthesis.speak(u);
+      }
+
+      document.getElementById('btnTest').onclick = () =>
+        speak('Hello, from Alice on Windows.');
+      document.getElementById('btnPing').onclick = ping;
+
+      // Hook PTT (F9 from main)
+      window.alice?.onPTT((down) => {
+        log('PTT ' + (down ? 'ON' : 'OFF'));
+        if (down) {
+          speak('Listening toggled.');
+        }
+      });
+
+      // initial ping
+      ping();
+    </script>
   </body>
 </html>

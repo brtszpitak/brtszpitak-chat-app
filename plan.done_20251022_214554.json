@@ -1,9 +1,13 @@
 ﻿{
   "name": "polish-dev-ux",
   "tasks": [
-    { "kind": "cmd",   "cmd": "npm i -D eslint prettier" },
-    { "kind": "write", "rel": ".prettierrc", "content": "{\n  \"singleQuote\": true,\n  \"semi\": true\n}\n" },
-    { "kind": "cmd",   "cmd": "git add -A" },
-    { "kind": "cmd",   "cmd": "git commit -m \"chore: add prettier config\"" }
+    { "kind": "cmd", "cmd": "npm i -D eslint prettier" },
+    {
+      "kind": "write",
+      "rel": ".prettierrc",
+      "content": "{\n  \"singleQuote\": true,\n  \"semi\": true\n}\n"
+    },
+    { "kind": "cmd", "cmd": "git add -A" },
+    { "kind": "cmd", "cmd": "git commit -m \"chore: add prettier config\"" }
   ]
 }

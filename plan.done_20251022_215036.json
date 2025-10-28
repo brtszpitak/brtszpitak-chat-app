@@ -1,6 +1,4 @@
 ﻿{
   "name": "test-plan",
-  "tasks": [
-    { "kind": "cmd", "cmd": "npm run smoke" }
-  ]
+  "tasks": [{ "kind": "cmd", "cmd": "npm run smoke" }]
 }

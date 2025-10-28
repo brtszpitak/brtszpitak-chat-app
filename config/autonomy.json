@@ -1,12 +1,9 @@
 ﻿{
-    "autonomy":  {
-                     "confirmInsideRepo":  false,
-                     "logPath":  "D:\\Alice\\projects\\chat-app\\logs\\autonomy-20251022.log",
-                     "pauseOn":  [
-                                     "leaving-safe-root",
-                                     "irreversible-beyond-git"
-                                 ],
-                     "safeRoot":  "D:\\Alice\\projects\\chat-app",
-                     "enabled":  true
-                 }
+  "autonomy": {
+    "confirmInsideRepo": false,
+    "logPath": "D:\\Alice\\projects\\chat-app\\logs\\autonomy-20251022.log",
+    "pauseOn": ["leaving-safe-root", "irreversible-beyond-git"],
+    "safeRoot": "D:\\Alice\\projects\\chat-app",
+    "enabled": true
+  }
 }

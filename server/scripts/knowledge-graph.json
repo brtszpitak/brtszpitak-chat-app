@@ -1,0 +1,20 @@
+{
+  "123": {
+    "user": "John Doe",
+    "topic": "AI development"
+  },
+  "2025-10-27T16:57:51.019Z": {
+    "query": "Hello",
+    "responses": []
+  },
+  "user-preferences": {},
+  "conv-1": {
+    "node-1": {
+      "text": "Hello",
+      "connectedTo": "node-2"
+    },
+    "node-2": {
+      "text": "World"
+    }
+  }
+}

@@ -14,7 +14,10 @@ const BASE_DIR = process.env.ALICE_BASE_DIR || path.resolve(__dirname, "..");
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
-app.use((req, _res, next) => { console.log(req.method, req.url); next(); });
+app.use((req, _res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 /* --- Helpers --- */
 function resolveSafe(relPath) {
@@ -87,8 +90,9 @@ app.post("/fs/list", (req, res) => {
   try {
     const rel = (req.body && req.body.path) || ".";
     const full = resolveSafe(rel);
-    const items = fs.readdirSync(full, { withFileTypes: true })
-      .map(d => ({ name: d.name, type: d.isDirectory() ? "dir" : "file" }));
+    const items = fs
+      .readdirSync(full, { withFileTypes: true })
+      .map((d) => ({ name: d.name, type: d.isDirectory() ? "dir" : "file" }));
     res.json({ ok: true, base: BASE_DIR, path: rel, items });
   } catch (e) {
     res.status(400).json({ ok: false, error: String(e) });
@@ -126,10 +130,13 @@ app.post("/exec", (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   try {
-    const cmd  = req.body?.cmd;
+    const cmd = req.body?.cmd;
     const args = Array.isArray(req.body?.args) ? req.body.args : [];
     const cwdRel = req.body?.cwd || ".";
-    if (!cmd) { res.write(JSON.stringify({ type: "error", message: "Missing 'cmd'." }) + "\n"); return res.end(); }
+    if (!cmd) {
+      res.write(JSON.stringify({ type: "error", message: "Missing 'cmd'." }) + "\n");
+      return res.end();
+    }
     const cwd = resolveSafe(cwdRel);
 
     const child = spawn(cmd, args, { cwd, env: process.env, shell: false });
@@ -162,10 +169,14 @@ app.get(/^\/(?!api)(.*)/, (_req, res) => res.sendFile(path.join(clientDist, "ind
 app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
 app.get("/__routes", (_req, res) => {
   const list = [];
-  const stack = (app && app._router && app._router.stack) ? app._router.stack : [];
+  const stack = app && app._router && app._router.stack ? app._router.stack : [];
   stack.forEach(function (l) {
     if (l && l.route && l.route.path && l.route.methods) {
-      var methods = Object.keys(l.route.methods).map(function (m) { return m.toUpperCase(); }).join(",");
+      var methods = Object.keys(l.route.methods)
+        .map(function (m) {
+          return m.toUpperCase();
+        })
+        .join(",");
       list.push(methods + " " + l.route.path);
     }
   });
@@ -177,10 +188,14 @@ app.get(/^(?!\/(api|health|fs|exec|chat))(?!.*\.).*$/, (_req, res) =>
 );
 app.get("/__routes", (_req, res) => {
   const list = [];
-  const s = (app && app._router && app._router.stack) ? app._router.stack : [];
+  const s = app && app._router && app._router.stack ? app._router.stack : [];
   s.forEach(function (l) {
     if (l && l.route && l.route.path && l.route.methods) {
-      var methods = Object.keys(l.route.methods).map(function (m){return m.toUpperCase();}).join(",");
+      var methods = Object.keys(l.route.methods)
+        .map(function (m) {
+          return m.toUpperCase();
+        })
+        .join(",");
       list.push(methods + " " + l.route.path);
     }
   });

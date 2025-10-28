@@ -20,7 +20,10 @@ const maxRead = Number(process.env.MAX_READ_BYTES || 5 * 1024 * 1024);
 const envDenyRaw = (process.env.DENYLIST_PATHS || "").trim();
 const defaultDeny = ["D:\\SteamLibrary"];
 const rawDeny = envDenyRaw
-  ? envDenyRaw.split(";").map((p) => p.trim()).filter(Boolean)
+  ? envDenyRaw
+      .split(";")
+      .map((p) => p.trim())
+      .filter(Boolean)
   : defaultDeny;
 
 // Normalize denylist (absolute, case-insensitive for Windows)

@@ -12,7 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 // Optional request log
-app.use((req, _res, next) => { console.log(req.method, req.url); next(); });
+app.use((req, _res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 // --- /chat: proxy Ollama stream → NDJSON for the client ---
 app.post("/chat", async (req, res) => {
@@ -35,8 +38,8 @@ app.post("/chat", async (req, res) => {
       body: JSON.stringify({
         model: MODEL,
         prompt: userMsg,
-        stream: true
-      })
+        stream: true,
+      }),
     });
 
     if (!upstream.ok || !upstream.body) {

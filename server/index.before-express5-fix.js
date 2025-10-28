@@ -40,7 +40,9 @@ app.post("/chat", async (req, res) => {
   };
 
   const send = (obj) => {
-    try { res.write(JSON.stringify(obj) + "\n"); } catch (_) {}
+    try {
+      res.write(JSON.stringify(obj) + "\n");
+    } catch (_) {}
   };
 
   send({ type: "start", id: Date.now().toString() });
@@ -95,4 +97,3 @@ app.use(express.static(clientDist));
 app.get("/*", (_, res) => res.sendFile(path.join(clientDist, "index.html")));
 
 app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
-

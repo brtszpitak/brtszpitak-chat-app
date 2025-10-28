@@ -22,7 +22,7 @@ app.post("/chat", async (req, res) => {
     ". ",
     "This is a demo ",
     "streaming ",
-    "reply."
+    "reply.",
   ];
 
   let i = 0;

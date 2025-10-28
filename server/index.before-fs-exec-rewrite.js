@@ -35,8 +35,9 @@ app.post("/fs/list", (req, res) => {
   try {
     const rel = (req.body && req.body.path) || ".";
     const full = resolveSafe(rel);
-    const items = fs.readdirSync(full, { withFileTypes: true })
-      .map(d => ({ name: d.name, type: d.isDirectory() ? "dir" : "file" }));
+    const items = fs
+      .readdirSync(full, { withFileTypes: true })
+      .map((d) => ({ name: d.name, type: d.isDirectory() ? "dir" : "file" }));
     res.json({ ok: true, base: BASE_DIR, path: rel, items });
   } catch (e) {
     res.status(400).json({ ok: false, error: String(e) });
@@ -76,10 +77,13 @@ app.post("/exec", (req, res) => {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   try {
-    const cmd  = req.body?.cmd;
+    const cmd = req.body?.cmd;
     const args = Array.isArray(req.body?.args) ? req.body.args : [];
     const cwdRel = req.body?.cwd || ".";
-    if (!cmd) { res.write(JSON.stringify({ type: "error", message: "Missing 'cmd'." }) + "\n"); return res.end(); }
+    if (!cmd) {
+      res.write(JSON.stringify({ type: "error", message: "Missing 'cmd'." }) + "\n");
+      return res.end();
+    }
     const cwd = resolveSafe(cwdRel);
 
     // Spawn without a shell for safety; pass full args explicitly
@@ -106,7 +110,10 @@ app.post("/exec", (req, res) => {
   }
 });
 // Optional request log
-app.use((req, _res, next) => { console.log(req.method, req.url); next(); });
+app.use((req, _res, next) => {
+  console.log(req.method, req.url);
+  next();
+});
 
 // --- /chat: proxy Ollama stream → NDJSON for the client ---
 app.post("/chat", async (req, res) => {
@@ -129,8 +136,8 @@ app.post("/chat", async (req, res) => {
       body: JSON.stringify({
         model: MODEL,
         prompt: userMsg,
-        stream: true
-      })
+        stream: true,
+      }),
     });
 
     if (!upstream.ok || !upstream.body) {
@@ -183,4 +190,3 @@ app.use(express.static(clientDist));
 app.get(/^\/(?!api)(.*)/, (_req, res) => res.sendFile(path.join(clientDist, "index.html")));
 
 app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
-

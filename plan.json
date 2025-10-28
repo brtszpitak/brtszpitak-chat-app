@@ -1,55 +1,14 @@
-{
-  "version": 1,
-  "tasks": [
-    {
-      "id": "deps-server",
-      "title": "npm ci (server)",
-      "action": "exec",
-      "cmd": "cmd.exe",
-      "args": [
-        "/c",
-        "C:\\Program Files\\nodejs\\npm.cmd",
-        "ci",
-        "--silent",
-        "--no-fund",
-        "--no-audit",
-        "--progress=false"
-      ],
-      "cwd": "D:\\Alice\\projects\\chat-app\\server",
-      "timeoutMs": 1800000,
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T19:54:06.968Z",
-          "note": "done"
-        }
-      ]
-    },
-    {
-      "id": "smoke",
-      "title": "npm run smoke",
-      "action": "exec",
-      "cmd": "cmd.exe",
-      "args": [
-        "/c",
-        "C:\\Program Files\\nodejs\\npm.cmd",
-        "run",
-        "smoke",
-        "--silent"
-      ],
-      "cwd": "D:\\Alice\\projects\\chat-app\\server",
-      "timeoutMs": 180000,
-      "status": "done",
-      "history": [
-        {
-          "ts": "2025-10-26T19:54:07.600Z",
-          "note": "done"
-        },
-        {
-          "ts": "2025-10-26T19:54:15.153Z",
-          "note": "done"
-        }
-      ]
-    }
-  ]
+﻿{
+    "tasks":  [
+                  {
+                      "status":  "todo",
+                      "id":  "pack-desktop",
+                      "kind":  "script"
+                  },
+                  {
+                      "status":  "todo",
+                      "id":  "note-progress",
+                      "kind":  "script"
+                  }
+              ]
 }

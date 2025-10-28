@@ -1,0 +1,10 @@
+﻿# Ignore historical server snapshots and generated scripts
+index.before-*.js
+scripts/generated-*.cjs
+scripts/failed/
+
+# Build artifacts to ignore if globs accidentally include them
+..\desktop-app\dist\
+..\releases\
+..\client\dist\
+..\node_modules\

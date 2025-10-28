@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
+const __dirname = path.dirname(__filename);
 const isDev = !app.isPackaged;
 
 function createWindow() {
@@ -12,13 +12,13 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true
-    }
+      contextIsolation: true,
+    },
   });
 
   if (isDev) {
     const port = process.env.VITE_PORT || 5174;
-    win.loadURL(\http://localhost:\\);
+    win.loadURL(`http://localhost:${port}`);
   } else {
     win.loadFile(path.join(__dirname, '..', '..', 'dist', 'index.html'));
   }

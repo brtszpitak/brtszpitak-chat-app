@@ -19,7 +19,10 @@ const maxWrite = Number(process.env.MAX_WRITE_BYTES || 5 * 1024 * 1024);
 const envDenyRaw = (process.env.DENYLIST_PATHS || "").trim();
 const defaultDeny = ["D:\\SteamLibrary"];
 const rawDeny = envDenyRaw
-  ? envDenyRaw.split(";").map((p) => p.trim()).filter(Boolean)
+  ? envDenyRaw
+      .split(";")
+      .map((p) => p.trim())
+      .filter(Boolean)
   : defaultDeny;
 
 const denyResolved = rawDeny.map((p) => path.resolve(p));
@@ -47,11 +50,13 @@ function safeResolve(userRel = "") {
   const candNorm = normalizeWin(candidate);
   if (!candNorm.startsWith(rootNorm)) {
     const err = new Error("Path escapes DRIVE_ROOT");
-    err.status = 400; throw err;
+    err.status = 400;
+    throw err;
   }
   if (isDenied(candidate)) {
     const err = new Error("Path is denied");
-    err.status = 403; throw err;
+    err.status = 403;
+    throw err;
   }
   return candidate;
 }
@@ -60,13 +65,15 @@ function safeResolve(userRel = "") {
 export async function writeTextFile(rel, content, { createDirs = true } = {}) {
   if (typeof content !== "string") {
     const err = new Error("Content must be a UTF-8 string");
-    err.status = 400; throw err;
+    err.status = 400;
+    throw err;
   }
   const target = safeResolve(rel);
   const size = Buffer.byteLength(content, "utf8");
   if (size > maxWrite) {
     const err = new Error(`File too large to write (>${maxWrite} bytes)`);
-    err.status = 413; throw err;
+    err.status = 413;
+    throw err;
   }
   const dir = path.dirname(target);
   if (createDirs) await fs.mkdir(dir, { recursive: true });
@@ -91,7 +98,11 @@ export async function renamePath(fromRel, toRel) {
 export async function removePath(rel) {
   const target = safeResolve(rel);
   const st = await fs.stat(target).catch(() => null);
-  if (!st) { const err = new Error("Path not found"); err.status = 404; throw err; }
+  if (!st) {
+    const err = new Error("Path not found");
+    err.status = 404;
+    throw err;
+  }
   if (st.isDirectory()) {
     await fs.rm(target, { recursive: true, force: true });
   } else {
