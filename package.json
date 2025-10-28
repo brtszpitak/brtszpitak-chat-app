@@ -1,45 +1,45 @@
 {
-  "name": "alice-chat-app",
-  "version": "1.0.0",
-  "description": "Project Alice - local AI assistant with Ollama and persistent memory (file store)",
-  "private": true,
-  "type": "module",
-  "main": "src/desktop/main.cjs",
-  "scripts": {
-    "start": "node ./src/server/index.cjs",
-    "dev": "concurrently \"cross-env VITE_PORT=5174 vite\" \"electron .\"",
-    "build": "vite build",
-    "client": "cd client && npm run dev",
-    "server": "node ./src/server/index.cjs",
-    "desktop": "electron .",
-    "smoke": "node ./tests/smoke.cjs",
-    "autonomy": "powershell -NoLogo -ExecutionPolicy Bypass -File scripts\\autonomy.ps1",
-    "format": "prettier -w \"src/**/*\"",
-    "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
-    "auto:tick": "npm run format && npm run lint || exit 0 && npm audit --audit-level=high || exit 0 && git add -A && git commit -m \"chore(auto): polish\" || exit 0"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^5.0.4",
-    "concurrently": "^9.2.1",
-    "cross-env": "^10.1.0",
-    "electron": "^38.4.0",
-    "eslint": "^9.38.0",
-    "eslint-plugin-react": "^7.37.5",
-    "nodemon": "^3.1.0",
-    "prettier": "^3.6.2",
-    "vite": "^7.1.11"
-  },
-  "engines": {
-    "node": ">=22.0.0"
-  },
-  "author": "Bartosz Pietak",
-  "license": "MIT"
+    "name":  "alice-chat-app",
+    "version":  "1.0.0",
+    "description":  "Project Alice - local AI assistant with Ollama and persistent memory (file store)",
+    "private":  true,
+    "type":  "module",
+    "main":  "src/desktop/main.cjs",
+    "scripts":  {
+                    "start":  "node ./src/server/index.cjs",
+                    "dev":  "concurrently \"cross-env VITE_PORT=5174 vite\" \"electron .\"",
+                    "build":  "vite build",
+                    "client":  "cd client \u0026\u0026 npm run dev",
+                    "server":  "node ./src/server/index.cjs",
+                    "desktop":  "electron .",
+                    "smoke":  "node ./tests/smoke.cjs",
+                    "autonomy":  "powershell -NoLogo -ExecutionPolicy Bypass -File scripts\\autonomy.ps1",
+                    "format":  "prettier -w \"src/**/*\"",
+                    "lint":  "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+                    "auto:tick":  "npm run format \u0026\u0026 npm run lint || exit 0 \u0026\u0026 npm audit --audit-level=high || exit 0 \u0026\u0026 git add -A \u0026\u0026 git commit -m \"chore(auto): polish\" || exit 0"
+                },
+    "dependencies":  {
+                         "cors":  "^2.8.5",
+                         "express":  "^4.21.2",
+                         "react":  "^19.2.0",
+                         "react-dom":  "^19.2.0",
+                         "socket.io":  "^4.8.1",
+                         "socket.io-client":  "^4.8.1"
+                     },
+    "devDependencies":  {
+                            "@vitejs/plugin-react":  "^5.0.4",
+                            "concurrently":  "^9.2.1",
+                            "cross-env":  "^10.1.0",
+                            "electron":  "^38.4.0",
+                            "eslint":  "^9.38.0",
+                            "eslint-plugin-react":  "^7.37.5",
+                            "nodemon":  "^3.1.0",
+                            "prettier":  "^3.6.2",
+                            "vite":  "^7.1.11"
+                        },
+    "engines":  {
+                    "node":  "\u003e=22.0.0"
+                },
+    "author":  "Bartosz Pietak",
+    "license":  "MIT"
 }

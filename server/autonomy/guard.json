@@ -1,0 +1,14 @@
+{
+  "allowPaths": [
+    "server",
+    "client",
+    "docs",
+    "scripts"
+  ],
+  "denyGlobs": [
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/dist/**"
+  ],
+  "maxWriteKB": 512
+}

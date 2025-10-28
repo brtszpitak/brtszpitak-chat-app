@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "tasks": [
+    {"id": "format-server", "status": "pending"},
+    {"id": "lint-server",   "status": "pending"},
+    {"id": "note-progress", "status": "pending"}
+  ]
+}
