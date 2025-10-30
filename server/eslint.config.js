@@ -1,6 +1,6 @@
-﻿/* eslint flat config (ESLint v9) */
-module.exports = [
-  // Global ignores (flat config doesn't read .eslintignore by default)
+﻿/** @type {import("eslint").Linter.FlatConfig[]} */
+export default [
+  // Global ignores for this subtree (flat config doesn't use .eslintignore)
   {
     ignores: [
       "client/**",
@@ -19,7 +19,7 @@ module.exports = [
     ]
   },
 
-  // Lint only JS/CJS in server/
+  // Lint only JS/CJS under server/
   {
     files: ["server/**/*.js", "server/**/*.cjs"],
     languageOptions: {
@@ -27,7 +27,7 @@ module.exports = [
       sourceType: "commonjs"
     },
     rules: {
-      // keep rules light here; autonomy shouldn't get blocked by style
+      // keep minimal; autonomy shouldn't be blocked by style
     }
   }
 ];

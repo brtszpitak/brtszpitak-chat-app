@@ -27,7 +27,7 @@ exports.run = async () => {
 
   // ESLint – scope to server JS/CJS only, honor .eslintignore, do not error if none matched
   const eslintCmd =
-    'npx eslint --no-error-on-unmatched-pattern --max-warnings=0 "server"';
+    'npx eslint --no-error-on-unmatched-pattern --max-warnings=0 server
   const ok = trySh(eslintCmd);
 
   return {
