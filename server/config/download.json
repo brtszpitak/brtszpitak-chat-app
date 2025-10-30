@@ -1,0 +1,14 @@
+﻿{
+  "allowedDomains": [
+    "raw.githubusercontent.com",
+    "github.com",
+    "objects.githubusercontent.com",
+    "nodejs.org",
+    "registry.npmjs.org",
+    "files.pythonhosted.org",
+    "huggingface.co",
+    "cdn.openai.com",
+    "download.microsoft.com"
+  ],
+  "maxBytes": 52428800
+}
