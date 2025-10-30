@@ -1,5 +1,0 @@
-const express = require("express");
-const app = express();
-console.log("ENTRY:", __filename);
-app.get("/health", (_req, res) => res.type("text/plain").send("ok-mini"));
-app.use(require("./routes/download"));

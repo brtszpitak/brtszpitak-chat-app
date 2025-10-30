@@ -11,3 +11,10 @@ logs/
 
 downloads/
 
+# Autonomy / runtime outputs
+logs/
+server/scripts/generated-*.cjs
+server/scripts/failed/
+*.bak
+*.bak_*
+**/*.bak
