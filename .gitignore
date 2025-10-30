@@ -1,29 +1,19 @@
-﻿node_modules/
+﻿# === runtime/build outputs ===
 dist/
-out/
-build/
-releases/
-logs/
-.vite/
-*.log
-*.map
-.DS_Store
-
-downloads/
-
-# Autonomy / runtime outputs
-logs/
-server/scripts/generated-*.cjs
-server/scripts/failed/
-*.bak
-*.bak_*
-**/*.bak
-# runtime / volatile
-logs/
-logs/*.json
-server/state.json
 client/dist/
+releases/
+out/
+logs/
+backups/
 desktop/dist/
 desktop-app/dist/
-.vscode/
-.idea/
+desktop-app/out/
+
+# === autonomy/noise ===
+server/scripts/failed/
+server/logs/
+server/state.json
+
+# === misc ===
+*.log
+*.tmp
