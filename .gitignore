@@ -22,3 +22,8 @@ server/scripts/failed/
 logs/
 logs/*.json
 server/state.json
+client/dist/
+desktop/dist/
+desktop-app/dist/
+.vscode/
+.idea/

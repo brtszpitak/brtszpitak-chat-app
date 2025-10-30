@@ -1,14 +1,15 @@
-﻿# Ignore historical server snapshots and generated scripts
-server/index.before-*.js
-server/scripts/generated-*.cjs
-server/scripts/failed/
+﻿# runtime / volatile
+logs/**
+server/state.json
 
-# Build artifacts
+# build artifacts
+dist/
+client/dist/
+desktop/dist/
 desktop-app/dist/
 releases/
-client/dist/
-node_modules/
+out/
 
-# ignore backup snapshots
-backups/
-
+# IDE noise
+.vscode/
+.idea/
