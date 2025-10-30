@@ -1,18 +1,32 @@
-﻿/** Root ESLint v9 flat config — JS only */
+﻿/** ESLint v9 flat config (root) */
 export default [
+  // Global ignores (replacement for .eslintignore)
   {
-    files: ['**/*.{js,cjs,mjs}'],
     ignores: [
-      'node_modules/**',
-      'dist/**',
-      'logs/**',
-      'releases/**',
-      'out/**',
-      'backups/**',
-      'client/**', // client has its own config
-      'server/scripts/failed/**',
-      'server/scripts/generated-*.cjs',
-      'server/index.before-*.js',
+      "client/**",
+      "dist/**",
+      "client/dist/**",
+      "desktop/**",
+      "desktop-app/**",
+      "releases/**",
+      "out/**",
+      "logs/**",
+      "backups/**",
+      "server/index.before-*.js",
+      "server/index.js.before-*.js",
+      "server/scripts/failed/**"
     ],
+  },
+
+  // Only lint server JS/CJS/MJS here (client has its own TS config)
+  {
+    files: ["server/**/*.{js,cjs,mjs}"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "commonjs",
+    },
+    rules: {
+      // put any rule overrides you want here
+    },
   },
 ];

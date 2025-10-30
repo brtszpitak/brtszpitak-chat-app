@@ -1,25 +1,12 @@
-﻿/** @type {import("eslint").Linter.FlatConfig[]} */
+﻿/** ESLint v9 flat config (server) */
 export default [
+  { ignores: ["scripts/failed/**"] },
   {
-    ignores: [
-      "client/**",
-      "desktop/**",
-      "desktop-app/**",
-      "dist/**",
-      "client/dist/**",
-      "releases/**",
-      "out/**",
-      "logs/**",
-      "backups/**",
-      "server/logs/**",
-      "server/index.before-*.js",
-      "server/scripts/failed/**",
-      "server/scripts/generated-*.cjs"
-    ]
+    files: ["**/*.{js,cjs,mjs}"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "commonjs",
+    },
+    rules: {},
   },
-  {
-    files: ["server/**/*.js", "server/**/*.cjs"],
-    languageOptions: { ecmaVersion: 2022, sourceType: "commonjs" },
-    rules: {}
-  }
 ];
