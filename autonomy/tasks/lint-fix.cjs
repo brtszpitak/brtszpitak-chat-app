@@ -1,29 +1,28 @@
-﻿const { execFileSync } = require("node:child_process");
+﻿const { spawnSync } = require("node:child_process");
 
-function sh(bin, args) {
-  try {
-    execFileSync(process.platform === "win32" ? bin + ".cmd" : bin, args, {
-      stdio: "inherit",
-      env: process.env,
-    });
-    return { ok: true };
-  } catch (err) {
-    // Do not fail the task; just record that we skipped/soft-failed
-    return { ok: false, err };
-  }
+function tryResolve(id) {
+  try { return require.resolve(id); } catch { return null; }
+}
+function runNode(script, args) {
+  if (!script) return { ok: false, note: "missing " + args?.[0] };
+  const res = spawnSync(process.execPath, [script, ...args], { stdio: "inherit", env: process.env });
+  return { ok: res.status === 0 };
 }
 
 async function run() {
-  // 1) Prettier across repo (safe: ignore-unknown so non-code files are skipped)
-  const p = sh("npx", ["prettier", "--cache", "--ignore-unknown", "--write", "."]);
+  // ---- Prettier
+  const prettierPath =
+    tryResolve("prettier/bin/prettier.cjs") || // Prettier 3
+    tryResolve("prettier/bin-prettier.js");    // Older Prettier
 
-  // 2) ESLint (ESLint v9 flat config; no legacy flags; scoped to server/)
-  //    Let ESLint warn/error but do not break autonomy if it fails.
-  const e = sh("npx", [
-    "eslint",
+  const p = runNode(prettierPath, ["--cache", "--ignore-unknown", "--write", "."]);
+
+  // ---- ESLint (v9 flat config)
+  const eslintPath = tryResolve("eslint/bin/eslint.js");
+  const e = runNode(eslintPath, [
     "server",
     "--max-warnings=0",
-    "--no-error-on-unmatched-pattern",
+    "--no-error-on-unmatched-pattern"
   ]);
 
   const note = `prettier=${p.ok ? "done" : "skipped/failed"} | eslintScoped=${e.ok ? "done" : "skipped/failed (ignored)"}`;
