@@ -18,3 +18,7 @@ server/scripts/failed/
 *.bak
 *.bak_*
 **/*.bak
+# runtime / volatile
+logs/
+logs/*.json
+server/state.json
