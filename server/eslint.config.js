@@ -3,10 +3,12 @@ export default [
   {
     files: ["**/*.{js,cjs,mjs}"],
     ignores: [
-      "node_modules/**","dist/**","logs/**",
+      "node_modules/**",
+      "dist/**",
+      "logs/**",
       "scripts/failed/**",
       "scripts/generated-*.cjs",
-      "index.before-*.js"
-    ]
-  }
+      "index.before-*.js",
+    ],
+  },
 ];

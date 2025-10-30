@@ -185,4 +185,4 @@ app.use(express.static(clientDist));
 app.get(/^(?!\/(api|health|fs|exec|chat|__routes))(?!.*\.).*$/, function (_req, res) {
   res.sendFile(path.join(clientDist, "index.html"));
 });
-app.use(require('./routes/download'));
+app.use(require("./routes/download"));

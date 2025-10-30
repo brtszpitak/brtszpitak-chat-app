@@ -166,7 +166,7 @@ app.post("/exec", (req, res) => {
 const clientDist = path.resolve(__dirname, "..", "client", "dist");
 app.use(express.static(clientDist));
 app.get(/^\/(?!api)(.*)/, (_req, res) => res.sendFile(path.join(clientDist, "index.html")));
-app.use(require('./routes/download'));
+app.use(require("./routes/download"));
 app.get("/__routes", (_req, res) => {
   const list = [];
   const stack = app && app._router && app._router.stack ? app._router.stack : [];
