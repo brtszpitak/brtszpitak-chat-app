@@ -1,38 +1,33 @@
-﻿/**
- * Lint/format task used by autonomy.
- * - Prettier across repo with .prettierignore
- * - ESLint scoped to server JS/CJS only with .eslintignore
- *   (do not fail the autonomy run if ESLint exits non-zero)
- */
-const { execSync } = require('child_process');
+﻿const { execFileSync } = require("node:child_process");
 
-function sh(cmd) {
-  execSync(cmd, { stdio: 'inherit', windowsHide: true });
-}
-
-function trySh(cmd) {
+function sh(bin, args) {
   try {
-    sh(cmd);
-    return true;
-  } catch (e) {
-    return false;
+    execFileSync(process.platform === "win32" ? bin + ".cmd" : bin, args, {
+      stdio: "inherit",
+      env: process.env,
+    });
+    return { ok: true };
+  } catch (err) {
+    // Do not fail the task; just record that we skipped/soft-failed
+    return { ok: false, err };
   }
 }
 
-exports.run = async () => {
-  // Prettier (fast, cached, respects .prettierignore)
-  trySh(
-    'npx prettier --ignore-path .prettierignore --ignore-unknown --cache --write .',
-  );
+async function run() {
+  // 1) Prettier across repo (safe: ignore-unknown so non-code files are skipped)
+  const p = sh("npx", ["prettier", "--cache", "--ignore-unknown", "--write", "."]);
 
-  // ESLint – scope to server JS/CJS only, honor .eslintignore, do not error if none matched
-  const eslintCmd =
-    'npx eslint --no-error-on-unmatched-pattern --max-warnings=0 server
-  const ok = trySh(eslintCmd);
+  // 2) ESLint (ESLint v9 flat config; no legacy flags; scoped to server/)
+  //    Let ESLint warn/error but do not break autonomy if it fails.
+  const e = sh("npx", [
+    "eslint",
+    "server",
+    "--max-warnings=0",
+    "--no-error-on-unmatched-pattern",
+  ]);
 
-  return {
-    ok: true,
-    note: `prettier=done | eslintScoped=${ok ? 'ran' : 'skipped/failed (ignored)'}`,
-  };
-};
+  const note = `prettier=${p.ok ? "done" : "skipped/failed"} | eslintScoped=${e.ok ? "done" : "skipped/failed (ignored)"}`;
+  return { ok: true, note };
+}
 
+module.exports = { run };

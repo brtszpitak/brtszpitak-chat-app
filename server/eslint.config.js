@@ -1,6 +1,5 @@
 ﻿/** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
-  // Global ignores for this subtree (flat config doesn't use .eslintignore)
   {
     ignores: [
       "client/**",
@@ -18,16 +17,9 @@ export default [
       "server/scripts/generated-*.cjs"
     ]
   },
-
-  // Lint only JS/CJS under server/
   {
     files: ["server/**/*.js", "server/**/*.cjs"],
-    languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: "commonjs"
-    },
-    rules: {
-      // keep minimal; autonomy shouldn't be blocked by style
-    }
+    languageOptions: { ecmaVersion: 2022, sourceType: "commonjs" },
+    rules: {}
   }
 ];
