@@ -1,80 +1,80 @@
 ﻿{
-    "tasks":  [
-                  {
-                      "priority":  10,
-                      "run":  "npm ci \u0026\u0026 npx npm-check-updates -u --target minor || exit 0",
-                      "accept":  "package.json and lockfile valid; server starts",
-                      "id":  "deps-audit",
-                      "kind":  "exec"
-                  },
-                  {
-                      "priority":  20,
-                      "run":  "npx prettier . --write",
-                      "accept":  "no prettier changes remaining",
-                      "id":  "format-all",
-                      "kind":  "exec"
-                  },
-                  {
-                      "priority":  30,
-                      "run":  "npx eslint . --ext .js,.jsx,.cjs --fix || exit 0",
-                      "accept":  "eslint passes or only warnings remain",
-                      "id":  "lint-fix",
-                      "kind":  "exec"
-                  },
-                  {
-                      "priority":  40,
-                      "note":  "Implement real token streaming in web UI (client). Ensure graceful fallback.",
-                      "accept":  "visible streaming; no console errors; /health OK",
-                      "id":  "streaming-ui",
-                      "kind":  "code"
-                  },
-                  {
-                      "priority":  45,
-                      "note":  "Hook TTS toggle in web UI; use local SAPI or configured voice. Non-blocking.",
-                      "accept":  "voice toggle works, plays last assistant reply",
-                      "id":  "tts-voice",
-                      "kind":  "code"
-                  },
-                  {
-                      "priority":  50,
-                      "note":  "Add minimal avatar component + lip-sync stub. Disabled by default.",
-                      "accept":  "avatar mounts cleanly behind a feature flag",
-                      "id":  "avatar-scaffold",
-                      "kind":  "code"
-                  },
-                  {
-                      "priority":  55,
-                      "note":  "Keep /download HTTPS-only, host whitelist, 50MB cap, checksum. Add tests.",
-                      "accept":  "download self-test passes; tests cover redirect + checksum mismatch",
-                      "id":  "router-hardening",
-                      "kind":  "code"
-                  },
-                  {
-                      "priority":  60,
-                      "note":  "Per-tick self-test: verify /health, /download smoke, tick heartbeat",
-                      "accept":  "heartbeat file updates each tick; errors logged",
-                      "id":  "health-selftest",
-                      "kind":  "code"
-                  },
-                  {
-                      "priority":  70,
-                      "note":  "Write docs/NEXT_PHASE_LOG.md with progress + next steps",
-                      "accept":  "doc updated each tick with short entry",
-                      "id":  "docs-notes",
-                      "kind":  "docs"
-                  },
-                  "lint-fix",
-                  "audit-server",
-                  "build-client",
-                  "smoke-endpoints",
-                  "note-progress",
-                  "self-rewrite"
-              ],
-    "version":  "3.0",
-    "tickSeconds":  30,
-    "goals":  [
-                  "Ship a stable, fast local app with token streaming + TTS",
-                  "Continuously improve code quality, reliability, and DX",
-                  "Stay safe: write only in allowed paths, verify before commit"
-              ]
+  "tasks": [
+    {
+      "priority": 10,
+      "run": "npm ci \u0026\u0026 npx npm-check-updates -u --target minor || exit 0",
+      "accept": "package.json and lockfile valid; server starts",
+      "id": "deps-audit",
+      "kind": "exec"
+    },
+    {
+      "priority": 20,
+      "run": "npx prettier . --write",
+      "accept": "no prettier changes remaining",
+      "id": "format-all",
+      "kind": "exec"
+    },
+    {
+      "priority": 30,
+      "run": "npx eslint . --ext .js,.jsx,.cjs --fix || exit 0",
+      "accept": "eslint passes or only warnings remain",
+      "id": "lint-fix",
+      "kind": "exec"
+    },
+    {
+      "priority": 40,
+      "note": "Implement real token streaming in web UI (client). Ensure graceful fallback.",
+      "accept": "visible streaming; no console errors; /health OK",
+      "id": "streaming-ui",
+      "kind": "code"
+    },
+    {
+      "priority": 45,
+      "note": "Hook TTS toggle in web UI; use local SAPI or configured voice. Non-blocking.",
+      "accept": "voice toggle works, plays last assistant reply",
+      "id": "tts-voice",
+      "kind": "code"
+    },
+    {
+      "priority": 50,
+      "note": "Add minimal avatar component + lip-sync stub. Disabled by default.",
+      "accept": "avatar mounts cleanly behind a feature flag",
+      "id": "avatar-scaffold",
+      "kind": "code"
+    },
+    {
+      "priority": 55,
+      "note": "Keep /download HTTPS-only, host whitelist, 50MB cap, checksum. Add tests.",
+      "accept": "download self-test passes; tests cover redirect + checksum mismatch",
+      "id": "router-hardening",
+      "kind": "code"
+    },
+    {
+      "priority": 60,
+      "note": "Per-tick self-test: verify /health, /download smoke, tick heartbeat",
+      "accept": "heartbeat file updates each tick; errors logged",
+      "id": "health-selftest",
+      "kind": "code"
+    },
+    {
+      "priority": 70,
+      "note": "Write docs/NEXT_PHASE_LOG.md with progress + next steps",
+      "accept": "doc updated each tick with short entry",
+      "id": "docs-notes",
+      "kind": "docs"
+    },
+    "lint-fix",
+    "audit-server",
+    "build-client",
+    "smoke-endpoints",
+    "note-progress",
+    "self-rewrite"
+  ],
+  "version": "3.0",
+  "tickSeconds": 30,
+  "goals": [
+    "Ship a stable, fast local app with token streaming + TTS",
+    "Continuously improve code quality, reliability, and DX",
+    "Stay safe: write only in allowed paths, verify before commit"
+  ]
 }

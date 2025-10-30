@@ -1,0 +1,98 @@
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
+const crypto = require("crypto");
+const { URL } = require("url");
+const express = require("express");
+const router = express.Router();
+
+// Whitelist + limits
+const ALLOW_HOSTS = new Set([
+  "raw.githubusercontent.com",
+  "github.com",
+  "objects.githubusercontent.com",
+  "registry.npmjs.org",
+  "nodejs.org",
+  "aka.ms",
+  "download.microsoft.com",
+  "huggingface.co",
+]);
+const MAX_BYTES = 50 * 1024 * 1024; // 50MB
+const DOWNLOAD_DIR = require("path").join(__dirname, "..", "..", "downloads");
+fs.mkdirSync(DOWNLOAD_DIR, { recursive: true });
+
+function safeJoin(dir, file) {
+  const p = path.normalize(path.join(dir, file));
+  if (!p.startsWith(dir)) throw new Error("Invalid path");
+  return p;
+}
+
+router.post("/download", express.json(), (req, res) => {
+  try {
+    const { url, filename, sha256 } = req.body || {};
+    if (!url || !filename) return res.status(400).json({ error: "url and filename required" });
+
+    const u = new URL(url);
+    if (u.protocol !== "https:") return res.status(400).json({ error: "HTTPS only" });
+    if (!ALLOW_HOSTS.has(u.hostname)) return res.status(400).json({ error: "Host not allowed" });
+
+    const destPath = safeJoin(DOWNLOAD_DIR, filename);
+    const tmpPath = destPath + ".part";
+    const hash = crypto.createHash("sha256");
+    let received = 0;
+
+    const out = fs.createWriteStream(tmpPath);
+
+    function pipeResp(rr) {
+      rr.on("data", (chunk) => {
+        received += chunk.length;
+        if (received > MAX_BYTES) {
+          rr.destroy(new Error("File too large"));
+        } else {
+          hash.update(chunk);
+          out.write(chunk);
+        }
+      });
+      rr.on("end", () => {
+        out.end(() => {
+          const digest = hash.digest("hex");
+          if (sha256 && sha256.toLowerCase() !== digest) {
+            fs.rmSync(tmpPath, { force: true });
+            return res.status(400).json({ error: "Checksum mismatch", got: digest });
+          }
+          fs.renameSync(tmpPath, destPath);
+          res.json({ ok: true, path: destPath, sha256: digest, bytes: received });
+        });
+      });
+      rr.on("error", (e) => {
+        out.close();
+        fs.rmSync(tmpPath, { force: true });
+        res.status(500).json({ error: e.message });
+      });
+    }
+
+    https
+      .get(u, (r) => {
+        if (r.statusCode >= 300 && r.statusCode < 400 && r.headers.location) {
+          const redir = new URL(r.headers.location, u.href);
+          if (redir.protocol !== "https:" || !ALLOW_HOSTS.has(redir.hostname)) {
+            out.close();
+            fs.rmSync(tmpPath, { force: true });
+            return res.status(400).json({ error: "Redirect host not allowed" });
+          }
+          https.get(redir, pipeResp);
+        } else {
+          pipeResp(r);
+        }
+      })
+      .on("error", (e) => {
+        out.close();
+        fs.rmSync(tmpPath, { force: true });
+        res.status(500).json({ error: e.message });
+      });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+module.exports = router;

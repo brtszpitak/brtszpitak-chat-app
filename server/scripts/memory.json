@@ -1,4 +1,8 @@
 {
   "user-preference": "dark-mode",
-  "conversations": ["This is the start of our conversation.", "We are discussing knowledge graphs."]
+  "conversations": [
+    "This is the start of our conversation.",
+    "We are discussing knowledge graphs."
+  ],
+  "lastConversation": "Hello! How can I assist you today?"
 }

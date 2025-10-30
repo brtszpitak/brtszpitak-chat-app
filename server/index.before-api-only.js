@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
@@ -185,5 +185,4 @@ app.use(express.static(clientDist));
 app.get(/^(?!\/(api|health|fs|exec|chat|__routes))(?!.*\.).*$/, function (_req, res) {
   res.sendFile(path.join(clientDist, "index.html"));
 });
-
-app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
+app.use(require('./routes/download'));

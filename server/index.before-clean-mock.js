@@ -1,4 +1,4 @@
-﻿// D:\Alice\projects\chat-app\server\index.js
+// D:\Alice\projects\chat-app\server\index.js
 const express = require("express");
 const path = require("path");
 
@@ -118,8 +118,7 @@ app.post("/chat", async (req, res) => {
 });
 app.use(express.static(clientDist));
 app.get(/^\/(?!api)(.*)/, (_, res) => res.sendFile(path.join(clientDist, "index.html")));
-
-app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
+app.use(require('./routes/download'));
 
 
 

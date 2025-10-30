@@ -13,23 +13,33 @@ const clientDist = path.join(root, "client", "dist");
 const planPath = path.join(root, "server", "autonomy", "plan.json");
 const guardPath = path.join(root, "server", "autonomy", "guard.json");
 
-function ensureDir(p){ if(!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true }); }
-ensureDir(logsDir); ensureDir(clientDist);
+function ensureDir(p) {
+  if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
+}
+ensureDir(logsDir);
+ensureDir(clientDist);
 
 const now = new Date();
-const y = now.toISOString().slice(0,10);
+const y = now.toISOString().slice(0, 10);
 const logPath = path.join(logsDir, `autonomy-${y}.ndjson`);
 
 function readJson(p, fallback) {
-  try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { return fallback; }
+  try {
+    return JSON.parse(fs.readFileSync(p, "utf8"));
+  } catch {
+    return fallback;
+  }
 }
 
-const plan  = readJson(planPath, { version: 1, tasks: [] });
+const plan = readJson(planPath, { version: 1, tasks: [] });
 const guard = readJson(guardPath, { allowPaths: [], denyGlobs: [], maxWriteKB: 512 });
 
 let changed = false;
 for (const t of plan.tasks) {
-  if (t.status === "pending") { t.status = "done"; changed = true; }
+  if (t.status === "pending") {
+    t.status = "done";
+    changed = true;
+  }
 }
 
 const event = {
@@ -37,8 +47,8 @@ const event = {
   kind: "tick",
   summary: "Minimal autonomy heartbeat",
   tasksTotal: plan.tasks.length,
-  tasksDone: plan.tasks.filter(t => t.status === "done").length,
-  guard
+  tasksDone: plan.tasks.filter((t) => t.status === "done").length,
+  guard,
 };
 
 fs.appendFileSync(logPath, JSON.stringify(event) + "\n", "utf8");

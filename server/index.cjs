@@ -6,6 +6,7 @@ const autonomyRouter = require("./routes/autonomy");
 const pkg = require("./package.json");
 const fswriteRouter = require("./routes/fswrite");
 const app = express();
+app.use(express.json());
 app.use(cors());
 app.use(express.json({ limit: "200kb" }));
 
@@ -13,7 +14,7 @@ app.get("/version", (_req, res) => {
   res.json({ name: pkg.name, version: pkg.version });
 }); // --- API routes first ---
 app.get("/health", (_req, res) => res.json({ ok: true }));
-app.use("/download", downloadRouter);
+app.use(downloadRouter);
 app.use("/autonomy", autonomyRouter);
 app.use("/fs", (req, res, next) => {
   const ip = req.ip || (req.connection && req.connection.remoteAddress) || "";
@@ -50,3 +51,5 @@ const PORT = 3001;
 app.listen(PORT, () => {
   console.log("Alice backend listening on http://127.0.0.1:" + PORT);
 });
+
+app.use("/download", downloadRouter);

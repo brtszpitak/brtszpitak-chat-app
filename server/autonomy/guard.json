@@ -1,14 +1,10 @@
 {
-  "allowPaths": [
-    "server",
-    "client",
-    "docs",
-    "scripts"
-  ],
-  "denyGlobs": [
-    "**/node_modules/**",
-    "**/.git/**",
-    "**/dist/**"
-  ],
-  "maxWriteKB": 512
+  "env": {
+    "NODE_OPTIONS": "--max_old_space_size=4096"
+  },
+  "allowExec": ["node", "npm", "npx", "powershell", "pwsh", "cmd", "git", "where", "curl"],
+  "maxExecSecondsPerTick": 90,
+  "maxWriteBytesPerTick": 2097152,
+  "allowPaths": [".", "server", "client", "downloads", "docs", "scripts", "tests", "config"],
+  "denyGlobs": ["**\\node_modules\\**", "**\\.git\\**", ".git", "**\\*.lock"]
 }

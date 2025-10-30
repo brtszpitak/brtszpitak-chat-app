@@ -18,7 +18,7 @@ const ALLOWLIST = new Set([
   "huggingface.co",
   "cdn.jsdelivr.net",
   "aka.ms",
-  "learn.microsoft.com"
+  "learn.microsoft.com",
 ]);
 
 const MAX_SIZE = 500 * 1024 * 1024; // 500 MB
@@ -41,7 +41,10 @@ export function registerDownloadRoute(app) {
         return res.status(403).json({ error: `Domain ${u.hostname} not allowed` });
       }
 
-      const safeName = (u.pathname.split("/").pop() || "download.bin").replace(/[^A-Za-z0-9._-]/g, "_");
+      const safeName = (u.pathname.split("/").pop() || "download.bin").replace(
+        /[^A-Za-z0-9._-]/g,
+        "_"
+      );
       const tmpPath = path.join(DOWNLOAD_DIR, `${Date.now()}-${safeName}.part`);
       const finalPath = path.join(DOWNLOAD_DIR, `${Date.now()}-${safeName}`);
 
@@ -49,7 +52,12 @@ export function registerDownloadRoute(app) {
       const hash = createHash("sha256");
 
       const request = https.get(u, (response) => {
-        if (response.statusCode && response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+        if (
+          response.statusCode &&
+          response.statusCode >= 300 &&
+          response.statusCode < 400 &&
+          response.headers.location
+        ) {
           // follow one redirect if within allowlist & https
           try {
             const nu = new URL(response.headers.location, u);
@@ -58,7 +66,7 @@ export function registerDownloadRoute(app) {
               request.destroy();
               return;
             }
-            https.get(nu, handleResponse).on("error", err => {
+            https.get(nu, handleResponse).on("error", (err) => {
               res.status(500).json({ error: err.message });
             });
           } catch (e) {
@@ -78,8 +86,12 @@ export function registerDownloadRoute(app) {
         response.on("data", (chunk) => {
           total += chunk.length;
           if (total > MAX_SIZE) {
-            try { out.close(); } catch {}
-            try { fs.unlinkSync(tmpPath); } catch {}
+            try {
+              out.close();
+            } catch {}
+            try {
+              fs.unlinkSync(tmpPath);
+            } catch {}
             res.status(413).json({ error: "File too large" });
             request.destroy();
             return;
@@ -88,7 +100,9 @@ export function registerDownloadRoute(app) {
         });
         pipeline(response, out, (err) => {
           if (err) {
-            try { fs.unlinkSync(tmpPath); } catch {}
+            try {
+              fs.unlinkSync(tmpPath);
+            } catch {}
             return res.status(500).json({ error: "Pipeline failed" });
           }
           const digest = hash.digest("hex");
@@ -103,7 +117,9 @@ export function registerDownloadRoute(app) {
       }
 
       request.on("error", (err) => {
-        try { fs.unlinkSync(tmpPath); } catch {}
+        try {
+          fs.unlinkSync(tmpPath);
+        } catch {}
         res.status(500).json({ error: err.message });
       });
     } catch (err) {

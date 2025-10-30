@@ -1,4 +1,4 @@
-﻿const express = require("express");
+const express = require("express");
 const path = require("path");
 const cors = require("cors");
 
@@ -90,5 +90,4 @@ const clientDist = path.resolve(__dirname, "..", "client", "dist");
 app.use(express.static(clientDist));
 // Express 5-safe catch-all using a regex (avoids path-to-regexp "*")
 app.get(/^\/(?!api)(.*)/, (_req, res) => res.sendFile(path.join(clientDist, "index.html")));
-
-app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
+app.use(require("./routes/download"));

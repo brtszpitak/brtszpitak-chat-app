@@ -1,11 +1,16 @@
+#!/usr/bin/env node
 const fs = require("fs");
 const path = require("path");
-const root = path.resolve(__dirname, "..", "..");
-const docs = path.join(root, "docs");
-fs.mkdirSync(docs, { recursive: true });
-const file = path.join(docs, "NEXT_PHASE_LOG.md");
-const ts = new Date().toISOString();
-const line = `- ${ts} - autonomy: creative tick complete\r\n`;
-fs.appendFileSync(file, line, "utf8");
-console.log("note-progress wrote", file);
-process.exit(0);
+try {
+  const root = path.resolve(__dirname, "..", "..");
+  const notePath = path.join(root, "docs", "NEXT_PHASE_LOG.md");
+  const ts = new Date().toISOString();
+  const line = `- ${ts} - autonomy: creative tick complete [AUTO]\n`;
+  fs.mkdirSync(path.dirname(notePath), { recursive: true });
+  fs.appendFileSync(notePath, line, { encoding: "utf8" });
+  process.stdout.write(`wrote ${notePath}\n`);
+  process.exit(0);
+} catch (err) {
+  console.error("note-progress failed:", (err && err.stack) || err);
+  process.exit(1);
+}

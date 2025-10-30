@@ -1,4 +1,5 @@
-﻿const express = require('express');
+﻿const downloadRouter = require('../../server/routes/download');
+const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
@@ -52,3 +53,5 @@ io.on('connection', (socket) => {
 });
 const PORT = process.env.PORT || SERVER_PORT || 3001;
 server.listen(PORT, () => console.log('[server] listening on', PORT));
+
+app.use('/download', downloadRouter);

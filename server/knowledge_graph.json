@@ -1,9 +1,28 @@
 {
-  "user-preferences": {
-    "theme": "dark",
-    "language": "en"
+  "concepts": {
+    "id": "concepts",
+    "label": "Concepts",
+    "related": {
+      "knowledge_graph": "part_of"
+    }
   },
-  "user-habits": {
-    "frequentTopics": ["AI", "Node.js"]
+  "knowledge_graph": {
+    "id": "knowledge_graph",
+    "label": "Knowledge Graph",
+    "related": {
+      "relationships": "has"
+    }
+  },
+  "relationships": {
+    "id": "relationships",
+    "label": "Relationships",
+    "related": {}
+  },
+  "topics": {
+    "id": "topics",
+    "label": "Topics",
+    "related": {
+      "concepts": "instance_of"
+    }
   }
 }

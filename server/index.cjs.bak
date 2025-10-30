@@ -1,0 +1,52 @@
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const downloadRouter = require("./routes/download");
+const autonomyRouter = require("./routes/autonomy");
+const pkg = require("./package.json");
+const fswriteRouter = require("./routes/fswrite");
+const app = express();
+app.use(cors());
+app.use(express.json({ limit: "200kb" }));
+
+app.get("/version", (_req, res) => {
+  res.json({ name: pkg.name, version: pkg.version });
+}); // --- API routes first ---
+app.get("/health", (_req, res) => res.json({ ok: true }));
+app.use(downloadRouter);
+app.use("/autonomy", autonomyRouter);
+app.use("/fs", (req, res, next) => {
+  const ip = req.ip || (req.connection && req.connection.remoteAddress) || "";
+  if (!(ip.includes("127.0.0.1") || ip.includes("::1") || ip.includes("localhost"))) {
+    return res.status(403).json({ ok: false, error: "local access only" });
+  }
+  next();
+});
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use("/fs", limiter);
+app.use("/fs", fswriteRouter);
+app.post("/chat", async (req, res) => {
+  const { message = "" } = req.body || {};
+  return res.json({ reply: "Alice: " + message.split("").reverse().join("") });
+});
+// --- Static client ---
+const CLIENT_DIST = path.join(__dirname, "..", "client", "dist");
+app.use(express.static(CLIENT_DIST));
+
+// --- SPA fallback (no path pattern; Express 5-safe) ---
+app.use((req, res, next) => {
+  // Let API paths fall through (just in case)
+  if (req.path.startsWith("/download") || req.path.startsWith("/health")) return next();
+  res.sendFile(path.join(CLIENT_DIST, "index.html"));
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log("Alice backend listening on http://127.0.0.1:" + PORT);
+});

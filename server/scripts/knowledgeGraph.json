@@ -1,0 +1,4 @@
+{
+  "introduction": "Hello! I can retain information about our previous conversations and interactions.",
+  "user1": { "name": "John Doe", "interests": ["AI", "Node.js"] }
+}

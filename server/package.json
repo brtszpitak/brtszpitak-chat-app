@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "alice-server",
   "version": "1.0.0",
   "private": true,
@@ -6,7 +6,8 @@
     "start": "node index.cjs",
     "smoke": "node ./smoke.mjs",
     "format": "prettier --write **/*.{js,cjs,json,md}",
-    "lint": "node scripts/runOnce.cjs prettier --check **/*.{js,cjs,json,md} && node scripts/write-last-lint.cjs . ok || node scripts/write-last-lint.cjs . fail"
+    "lint": "node scripts/runOnce.cjs prettier --check **/*.{js,cjs,json,md} && node scripts/write-last-lint.cjs . ok || node scripts/write-last-lint.cjs . fail",
+    "note-progress": "node scripts/note-progress.cjs"
   },
   "dependencies": {
     "alice-server": "file:",
