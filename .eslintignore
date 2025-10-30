@@ -1,0 +1,21 @@
+﻿# Client (has its own config / TS)
+client/**
+
+# Snapshot variants and failed/generated scripts
+server/index.before-*.js
+server/scripts/failed/**
+server/scripts/generated-*.cjs
+
+# Build + runtime + backups
+dist/**
+client/dist/**
+desktop/dist/**
+desktop-app/dist/**
+releases/**
+out/**
+logs/**
+backups/**
+
+# Misc IDE
+.vscode/**
+.idea/**

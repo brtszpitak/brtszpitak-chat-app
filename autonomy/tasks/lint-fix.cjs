@@ -18,18 +18,18 @@ async function ensurePrettier(cwd) {
   }
 }
 
-async function maybeEnsureESLint(cwd) {
+async function maybeEnsureeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
   const hasLocal = fs.existsSync(
-    path.join(cwd, 'node_modules', '.bin', 'eslint'),
+    path.join(cwd, 'node_modules', '.bin', 'eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
   );
   if (!hasLocal && fs.existsSync(path.join(cwd, 'package.json'))) {
     const pkg = JSON.parse(
       fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'),
     );
     const need =
-      (pkg.devDependencies && pkg.devDependencies.eslint) ||
-      (pkg.dependencies && pkg.dependencies.eslint);
-    if (need) await sh('npm', ['i', '-D', 'eslint'], { cwd });
+      (pkg.devDependencies && pkg.devDependencies.eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
+      (pkg.dependencies && pkg.dependencies.eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
+    if (need) await sh('npm', ['i', '-D', 'eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
   }
 }
 
@@ -39,10 +39,10 @@ async function runPrettier(cwd) {
   return code === 0;
 }
 
-async function runESLintFix(cwd) {
-  if (!fs.existsSync(path.join(cwd, 'node_modules', '.bin', 'eslint')))
+async function runeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
+  if (!fs.existsSync(path.join(cwd, 'node_modules', '.bin', 'eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
     return false;
-  const code = await sh('npx', ['eslint', '.', '--fix'], { cwd });
+  const code = await sh('npx', ['eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
   return code === 0;
 }
 
@@ -59,11 +59,11 @@ module.exports = {
     for (const cwd of roots) {
       try {
         await ensurePrettier(cwd);
-        await maybeEnsureESLint(cwd);
+        await maybeEnsureeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
         const pOk = await runPrettier(cwd);
-        const eOk = await runESLintFix(cwd);
+        const eOk = await runeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
         notes.push(
-          `${path.basename(cwd) || 'root'}: prettier=${pOk}, eslintFix=${eOk}`,
+          `${path.basename(cwd) || 'root'}: prettier=${pOk}, eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
         );
       } catch (e) {
         notes.push(`${path.basename(cwd) || 'root'}: error=${e.message}`);
@@ -72,3 +72,4 @@ module.exports = {
     return { ok: true, note: notes.join(' | ') };
   },
 };
+
