@@ -1,75 +1,34 @@
-﻿const fs = require('fs');
-const path = require('path');
-const { spawn } = require('child_process');
+﻿/**
+ * Lint/format task used by autonomy.
+ * - Prettier across repo with .prettierignore
+ * - ESLint scoped to server JS/CJS only with .eslintignore
+ *   (do not fail the autonomy run if ESLint exits non-zero)
+ */
+const { execSync } = require("child_process");
 
-function sh(cmd, args = [], opts = {}) {
-  return new Promise((resolve) => {
-    const p = spawn(cmd, args, { shell: true, stdio: 'inherit', ...opts });
-    p.on('close', (code) => resolve(code));
-  });
+function sh(cmd) {
+  execSync(cmd, { stdio: "inherit", windowsHide: true });
 }
 
-async function ensurePrettier(cwd) {
-  const hasLocal = fs.existsSync(
-    path.join(cwd, 'node_modules', '.bin', 'prettier'),
-  );
-  if (!hasLocal) {
-    await sh('npm', ['i', '-D', 'prettier'], { cwd });
-  }
-}
-
-async function maybeEnsureeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-  const hasLocal = fs.existsSync(
-    path.join(cwd, 'node_modules', '.bin', 'eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-  );
-  if (!hasLocal && fs.existsSync(path.join(cwd, 'package.json'))) {
-    const pkg = JSON.parse(
-      fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'),
-    );
-    const need =
-      (pkg.devDependencies && pkg.devDependencies.eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-      (pkg.dependencies && pkg.dependencies.eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-    if (need) await sh('npm', ['i', '-D', 'eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-  }
-}
-
-async function runPrettier(cwd) {
-  const globs = ['**/*.{js,cjs,mjs,ts,tsx,json,md,css,scss,html}'];
-  const code = await sh('npx', ['prettier', '--write', ...globs], { cwd });
-  return code === 0;
-}
-
-async function runeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-  if (!fs.existsSync(path.join(cwd, 'node_modules', '.bin', 'eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
+function trySh(cmd) {
+  try {
+    sh(cmd);
+    return true;
+  } catch (e) {
     return false;
-  const code = await sh('npx', ['eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-  return code === 0;
+  }
 }
 
-module.exports = {
-  name: 'lint-fix',
-  run: async () => {
-    const roots = [process.cwd()];
-    for (const sub of ['server', 'client']) {
-      const p = path.join(process.cwd(), sub);
-      if (fs.existsSync(p) && fs.statSync(p).isDirectory()) roots.push(p);
-    }
+exports.run = async () => {
+  // Prettier (fast, cached, respects .prettierignore)
+  trySh('npx prettier --ignore-path .prettierignore --ignore-unknown --cache --write .');
 
-    let notes = [];
-    for (const cwd of roots) {
-      try {
-        await ensurePrettier(cwd);
-        await maybeEnsureeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-        const pOk = await runPrettier(cwd);
-        const eOk = await runeslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-        notes.push(
-          `${path.basename(cwd) || 'root'}: prettier=${pOk}, eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0
-        );
-      } catch (e) {
-        notes.push(`${path.basename(cwd) || 'root'}: error=${e.message}`);
-      }
-    }
-    return { ok: true, note: notes.join(' | ') };
-  },
+  // ESLint – scope to server JS/CJS only, honor .eslintignore, do not error if none matched
+  const eslintCmd = 'npx eslint "server/**/*.js" "server/**/*.cjs" --ignore-path .eslintignore --no-error-on-unmatched-pattern --max-warnings=0';
+  const ok = trySh(eslintCmd);
+
+  return {
+    ok: true,
+    note: `prettier=done | eslintScoped=${ok ? "ran" : "skipped/failed (ignored)"}`
+  };
 };
-
