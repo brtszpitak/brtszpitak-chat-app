@@ -26,3 +26,4 @@ module.exports = {
     await run('git', ['commit', '-m', msg, '--allow-empty']);
   },
 };
+
