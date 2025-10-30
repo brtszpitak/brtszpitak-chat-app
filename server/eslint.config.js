@@ -2,6 +2,6 @@
 export default [
   {
     files: ["**/*.js", "**/*.cjs", "**/*.mjs"],
-    ignores: ["node_modules/**", "dist/**", "logs/**"]
-  }
+    ignores: ["node_modules/**", "dist/**", "logs/**"],
+  },
 ];
