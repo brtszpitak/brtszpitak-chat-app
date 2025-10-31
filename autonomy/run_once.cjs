@@ -3,7 +3,45 @@
 const path = require("node:path");
 const { execSync, exec: _exec } = require("node:child_process");
 const { promisify } = require("node:util");
-const exec = promisify(_exec);  // promisified exec for tasks
+const http = require("node:http");
+const https = require("node:https");
+
+const exec = promisify(_exec);
+
+// Minimal fetch polyfill for Node (supports GET/POST, text/json helpers)
+async function nodeFetch(url, opts = {}) {
+  return new Promise((resolve, reject) => {
+    try {
+      const u = new URL(url);
+      const lib = u.protocol === "https:" ? https : http;
+      const req = lib.request(url, {
+        method: opts.method || "GET",
+        headers: opts.headers || {},
+      }, (res) => {
+        let data = "";
+        res.on("data", (d) => { data += d; });
+        res.on("end", () => {
+          resolve({
+            ok: res.statusCode >= 200 && res.statusCode < 300,
+            status: res.statusCode,
+            statusText: res.statusMessage,
+            headers: res.headers,
+            text: async () => data,
+            json: async () => JSON.parse(data || "{}"),
+          });
+        });
+      });
+      req.on("error", reject);
+      if (opts.body) req.write(opts.body);
+      req.end();
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+// make it available globally for tasks that use global fetch
+if (!globalThis.fetch) globalThis.fetch = nodeFetch;
 
 function commitIfDirty(msg = "chore: auto-baseline after note-progress") {
   const out = execSync("git status --porcelain", { encoding: "utf8" }).trim();
@@ -18,8 +56,8 @@ async function runTask(name) {
   console.log(`=== RUN ${name} ===`);
   const modPath = path.join(__dirname, "tasks", `${name}.cjs`);
   const mod = require(modPath);
-  // Pass helpers expected by tasks
-  const res = await mod.run({ exec });
+  // Provide helpers to tasks (both patterns work: destructured or global fetch)
+  const res = await mod.run({ exec, fetch: nodeFetch });
   console.log(`[task ${name}]`, res);
   return res;
 }
