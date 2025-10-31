@@ -50,12 +50,14 @@ async function nodeFetch(url, opts = {}) {
 // make it available globally for tasks that use global fetch
 if (!globalThis.fetch) globalThis.fetch = nodeFetch;
 
-function commitIfDirty(msg = "chore: auto-baseline after note-progress") {
-  const out = execSync("git status --porcelain", { encoding: "utf8" }).trim();
+function commitIfDirty(msg = 'chore: auto-baseline after note-progress') {
+  const out = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
   if (!out) return;
-  execSync("git add -A", { stdio: "inherit" });
+  execSync('git add -A', { stdio: 'inherit' });
   const safe = String(msg).replace(/"/g, '\\"');
-  try { execSync('git commit -m "' + safe + '"', { stdio: "inherit" }); } catch {}
+  try {
+    execSync('git commit -m "' + safe + '"', { stdio: 'inherit' });
+  } catch {}
 }
 
 async function runTask(name) {
@@ -86,5 +88,3 @@ async function runTask(name) {
   console.error(e);
   process.exit(1);
 });
-
-
