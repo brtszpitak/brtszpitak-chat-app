@@ -1,5 +1,18 @@
 ﻿const path = require('path');
 const fs = require('fs');
+
+// Prefer execFile(signature) when args[] is provided; otherwise fall back to a single command string.
+async function runExec(execFn, cmd, args, opts) {
+  if (Array.isArray(args)) {
+    try { 
+      return await execFn(cmd, args, opts);    // execFile-style
+    } catch (e) {
+      const full = [cmd, ...args].join(' ');
+      return execFn(full, opts);               // fallback to exec-style
+    }
+  }
+  return execFn(cmd, args);                    // plain exec-style
+}
 const git = require('../lib/git.cjs');
 
 module.exports = {
@@ -47,17 +60,17 @@ module.exports = {
     }
 
     // Format, lint, build quick checks
-    await exec('npm', ['run', 'prettier', '--', '--write', '.'], {
+    await runExec(exec, 'npm', ['run', 'prettier', '--', '--write', '.'], {
       cwd: process.cwd(),
     });
     try {
-      await exec('npm', ['run', 'lint', '--', '--max-warnings=0'], {
+      await runExec(exec, 'npm', ['run', 'lint', '--', '--max-warnings=0'], {
         cwd: process.cwd(),
       });
     } catch (e) {}
     const client = path.resolve(process.cwd(), 'client');
     try {
-      await exec('npm', ['run', 'build'], { cwd: client });
+      await runExec(exec, 'npm', ['run', 'build'], { cwd: client });
     } catch (e) {}
 
     await git.addAll();
@@ -69,3 +82,4 @@ module.exports = {
     };
   },
 };
+
