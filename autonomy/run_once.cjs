@@ -66,7 +66,12 @@ async function runTask(name) {
   const modPath = path.join(__dirname, 'tasks', `${name}.cjs`);
   const mod = require(modPath);
   // Provide helpers to tasks (both patterns work: destructured or global fetch)
-  const res = await mod.run({ exec, fetch: nodeFetch, datetime, ...require(path.join(__dirname, "lib", "git.cjs")) });
+  const res = await mod.run({
+    exec,
+    fetch: nodeFetch,
+    datetime,
+    ...require(path.join(__dirname, 'lib', 'git.cjs')),
+  });
   console.log(`[task ${name}]`, res);
   return res;
 }
@@ -84,6 +89,3 @@ async function runTask(name) {
   console.error(e);
   process.exit(1);
 });
-
-
-
