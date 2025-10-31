@@ -5,9 +5,13 @@ const git = require('../lib/git.cjs');
 module.exports = {
   name: 'self-rewrite',
   run: async ({ exec, proposeDiff, datetime }) => {
-  if (typeof proposeDiff !== "function") {
-    proposeDiff = async () => ({ ok: true, note: "fallback proposeDiff", edits: [] });
-  }
+    if (typeof proposeDiff !== 'function') {
+      proposeDiff = async () => ({
+        ok: true,
+        note: 'fallback proposeDiff',
+        edits: [],
+      });
+    }
     await git.assertClean();
     const branch =
       'autonomy/rewrite-' + datetime().toISOString().replace(/[:.]/g, '-');
@@ -65,4 +69,3 @@ module.exports = {
     };
   },
 };
-
