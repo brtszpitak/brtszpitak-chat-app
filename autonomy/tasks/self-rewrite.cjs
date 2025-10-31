@@ -1,6 +1,6 @@
 ﻿const path = require('path');
 const fs = require('fs');
-const git = require('../lib/git.cjs');
+const git = require('../lib/git-compat.cjs');
 
 module.exports = {
   name: 'self-rewrite',
@@ -62,3 +62,4 @@ module.exports = {
     };
   },
 };
+
