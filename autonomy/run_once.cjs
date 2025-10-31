@@ -50,34 +50,12 @@ async function nodeFetch(url, opts = {}) {
 // make it available globally for tasks that use global fetch
 if (!globalThis.fetch) globalThis.fetch = nodeFetch;
 
-function commitIfDirty(msg = 'chore: auto-baseline after note-progress') {
-  const out = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
-  if (out) {
-    execSync('git add -A', { stdio: 'inherit' });
-
-    const ensureFn = (fn, name) =>
-      typeof fn === 'function'
-        ? fn
-        : async (...args) => ({ ok: true, note: `${name}: shim`, edits: [] });
-
-    const helpers = {
-      exec,
-      fetch: nodeFetch,
-      datetime,
-      // functions expected by tasks:
-      proposeDiff: ensureFn(compat.proposeDiff, 'proposeDiff'),
-      applyDiff: ensureFn(compat.applyDiff, 'applyDiff'),
-      assertClean: ensureFn(compat.assertClean, 'assertClean'),
-      commit: ensureFn(compat.commit, 'commit'),
-      // git helpers used directly in self-rewrite
-      addAll: ensureFn(compat.addAll, 'addAll'),
-      checkoutNew: ensureFn(compat.checkoutNew, 'checkoutNew'),
-    };
-    const safe = String(msg).replace(/"/g, '\\"');
-    try {
-      execSync('git commit -m "' + safe + '"', { stdio: 'inherit' });
-    } catch {}
-  }
+function commitIfDirty(msg = "chore: auto-baseline after note-progress") {
+  const out = execSync("git status --porcelain", { encoding: "utf8" }).trim();
+  if (!out) return;
+  execSync("git add -A", { stdio: "inherit" });
+  const safe = String(msg).replace(/"/g, '\\"');
+  try { execSync('git commit -m "' + safe + '"', { stdio: "inherit" }); } catch {}
 }
 
 async function runTask(name) {
@@ -108,4 +86,5 @@ async function runTask(name) {
   console.error(e);
   process.exit(1);
 });
+
 
