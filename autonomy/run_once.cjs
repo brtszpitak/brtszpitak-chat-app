@@ -8,12 +8,7 @@ const https = require('node:https');
 
 const exec = promisify(_exec);
 
-
-const datetime = () => {
-  // ISO without milliseconds (e.g., 2025-10-31T23:59:59Z)
-  const d = new Date();
-  return new Date(Math.floor(d.getTime() / 1000) * 1000).toISOString();
-};
+const datetime = () => new Date();
 // Minimal fetch polyfill for Node (supports GET/POST, text/json helpers)
 async function nodeFetch(url, opts = {}) {
   return new Promise((resolve, reject) => {
