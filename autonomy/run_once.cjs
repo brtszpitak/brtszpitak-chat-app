@@ -7,6 +7,9 @@ function commitIfDirty(msg = 'chore: auto-baseline after note-progress') {
     try { execSync('git commit -m "' + safe + '"', { stdio: 'inherit' }); } catch {}
   }
 }
+
+(async () => {
+
     await runTask(t);
   }
   console.log('All tasks complete.');
@@ -19,3 +22,5 @@ function commitIfDirty(msg = 'chore: auto-baseline after note-progress') {
 
 
 
+
+})().catch(e => { console.error(e); process.exit(1); });
