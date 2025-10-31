@@ -1,4 +1,12 @@
-﻿const { spawn } = require('child_process');
+﻿const { execSync } = require('node:child_process');
+function commitIfDirty(msg = 'chore: auto-baseline after note-progress') {
+  const out = execSync('git status --porcelain', { encoding: 'utf8' }).trim();
+  if (out) {
+    execSync('git add -A', { stdio: 'inherit' });
+    try { execSync(git commit -m "", { stdio: 'inherit' }); } catch {}
+  }
+}
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const fetch = (...args) =>
@@ -47,3 +55,4 @@ async function runTask(name) {
   console.error(e);
   process.exit(1);
 });
+
