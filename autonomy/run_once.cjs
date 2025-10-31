@@ -84,4 +84,3 @@ async function runTask(name) {
   console.error(e);
   process.exit(1);
 });
-
