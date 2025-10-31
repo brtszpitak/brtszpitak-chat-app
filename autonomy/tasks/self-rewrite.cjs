@@ -4,14 +4,14 @@ const fs = require('fs');
 // Prefer execFile(signature) when args[] is provided; otherwise fall back to a single command string.
 async function runExec(execFn, cmd, args, opts) {
   if (Array.isArray(args)) {
-    try { 
-      return await execFn(cmd, args, opts);    // execFile-style
+    try {
+      return await execFn(cmd, args, opts); // execFile-style
     } catch (e) {
       const full = [cmd, ...args].join(' ');
-      return execFn(full, opts);               // fallback to exec-style
+      return execFn(full, opts); // fallback to exec-style
     }
   }
-  return execFn(cmd, args);                    // plain exec-style
+  return execFn(cmd, args); // plain exec-style
 }
 const git = require('../lib/git.cjs');
 
@@ -82,4 +82,3 @@ module.exports = {
     };
   },
 };
-
