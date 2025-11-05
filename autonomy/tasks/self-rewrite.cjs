@@ -69,7 +69,7 @@ module.exports = {
     }
 
     // Apply up to 10 guarded edits
-    let applied = 0;
+    let applied = 0; const touched = [];
     try {
       const plan = await proposeDiff({
         goals: ['improve reliability', 'reduce warnings', 'enhance logs'],
@@ -154,7 +154,12 @@ module.exports = {
     }
 
     ensureLocalIdentity(cwd);
-    const msg = `self-rewrite: ${applied} edits`;
+    const stagedList = trySh("git", ["diff","--cached","--name-only"], cwd).split(/\r?\n/).filter(Boolean);
+const fromPlan = stagedList.filter(f => touched.includes(f.replace(/\\/g,"/")));
+if (applied === 0 && fromPlan.length === 0) {
+  return { ok: true, note: `self-rewrite: no plan edits; skipping commit on ${branch}` };
+}
+const msg = `self-rewrite: ${applied} edits`;
 
     // Commit with GPG disabled and hooks bypassed
     try {
@@ -187,3 +192,4 @@ module.exports = {
     }
   },
 };
+
