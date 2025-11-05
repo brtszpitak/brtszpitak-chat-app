@@ -144,9 +144,24 @@ module.exports = {
     try {
       await runExec(exec, 'git', ['commit', '-m', msg], { cwd });
       return { ok: true, note: `self-rewrite committed (${msg}) on ${branch}` };
-    } catch (e) {
-      const head = await textOut(
-        runExec(exec, 'git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd }),
+      } catch (e) {
+    const head = await textOut(runExec(exec, "git", ["rev-parse", "--abbrev-ref", "HEAD"], { cwd }));
+    const stagedText = await textOut(runExec(exec, "git", ["diff", "--cached", "--name-only"], { cwd }));
+    const stagedArr  = stagedText.split(/\r?\n/).filter(Boolean);
+    const stagedTail = stagedArr.slice(0, 5);                 // array
+    const stagedStr  = JSON.stringify(stagedTail);            // safe, never [object Object]
+    const errStr     = (e && (e.stderr || e.message)) ? String(e.stderr || e.message) : String(e);
+
+    return {
+      ok: true,
+      note:
+        "self-rewrite: commit skipped (git refused). " +
+        "branch=" + String(head) +
+        " staged=" + stagedStr +
+        " msg=\"" + String(`self-rewrite: ${applied} edits`) + "\" " +
+        "err=" + errStr
+    };
+  }),
       );
       const stagedText = await textOut(
         runExec(exec, 'git', ['diff', '--cached', '--name-only'], { cwd }),
@@ -175,3 +190,4 @@ module.exports = {
 };
 
 console.log('[SELF-REWRITE MARK] loaded:', __filename);
+
