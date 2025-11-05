@@ -30,3 +30,6 @@ server/scripts/generated-*.cjs
 
 # === editor/backup snapshots ===
 *.bak
+
+_smoke_retry.patch
+*.patch
