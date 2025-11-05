@@ -1,0 +1,25 @@
+﻿{
+  "id": "alice-re1-inspired",
+  "version": 1,
+  "role": "lab_studio_assistant",
+  "palette": {
+    "primary": "#C20E1A",
+    "neutrals": ["#111111","#202020","#EAEAEA"]
+  },
+  "style_notes": [
+    "Short brunette bob / practical hair",
+    "Minimalist lab attire (clean white/black balance), subtle red accent",
+    "Confident, calm expression; studio/lab lighting",
+    "Cinematic yet professional — not a 1:1 likeness; inspired-by RE1 aesthetic"
+  ],
+  "lipsync": {
+    "target_fps": 60,
+    "viseme_map": "basic_english_22",
+    "pipeline": "later:self-implemented"
+  },
+  "voice": {
+    "persona": "clear, calm, mid-low female",
+    "speed": 1.0,
+    "pitch": 0.0
+  }
+}
