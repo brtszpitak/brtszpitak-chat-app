@@ -81,10 +81,11 @@ async function runTask(name) {
   await runTask('build-client');
   await runTask('smoke-endpoints');
   await runTask('note-progress');
-  commitIfDirty(); // keep tree clean before self-rewrite
   await runTask('self-rewrite');
+  commitIfDirty(); // keep tree clean after self-rewrite
   console.log('All tasks complete.');
 })().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
