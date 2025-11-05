@@ -13,3 +13,5 @@ out/
 # IDE noise
 .vscode/
 .idea/
+
+server/index.before-*.js
