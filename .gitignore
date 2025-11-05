@@ -33,3 +33,5 @@ server/scripts/generated-*.cjs
 
 _smoke_retry.patch
 *.patch
+
+autonomy/tasks/*.broken-*
