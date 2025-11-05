@@ -173,3 +173,5 @@ module.exports = {
     }
   },
 };
+
+console.log('[SELF-REWRITE MARK] loaded:', __filename);
