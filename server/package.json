@@ -1,22 +1,22 @@
 {
-  "name": "alice-server",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "start": "node index.cjs",
-    "smoke": "node ./smoke.mjs",
-    "format": "prettier --write **/*.{js,cjs,json,md}",
-    "lint": "node scripts/runOnce.cjs prettier --check **/*.{js,cjs,json,md} && node scripts/write-last-lint.cjs . ok || node scripts/write-last-lint.cjs . fail",
-    "note-progress": "node scripts/note-progress.cjs"
-  },
-  "dependencies": {
-    "alice-server": "file:",
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "express-rate-limit": "^7.5.1",
-    "helmet": "^8.1.0"
-  },
-  "devDependencies": {
-    "prettier": "^3.6.2"
-  }
+    "name": "alice-server",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node index.cjs",
+        "smoke": "node ./smoke.mjs",
+        "format": "prettier --write **/*.{js,cjs,json,md}",
+        "lint": "node scripts/runOnce.cjs prettier --check **/*.{js,cjs,json,md} && node scripts/write-last-lint.cjs . ok || node scripts/write-last-lint.cjs . fail",
+        "note-progress": "node scripts/note-progress.cjs"
+    },
+    "dependencies": {
+        "alice-chat-app": "file:..",
+        "cors": "^2.8.5",
+        "express": "^5.1.0",
+        "express-rate-limit": "^7.5.1",
+        "helmet": "^8.1.0"
+    },
+    "devDependencies": {
+        "prettier": "^3.6.2"
+    }
 }
