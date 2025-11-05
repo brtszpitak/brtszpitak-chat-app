@@ -1,6 +1,6 @@
 ﻿const path = require("path");
 const fs = require("fs");
-const git = require("../lib/git.cjs);
+const git = require("../lib/git.cjs");
 
 function shellJoin(cmd, args = []) {
   const q = (s) => `"${String(s).replace(/"/g, '\\"')}"`;
