@@ -4,8 +4,6 @@ const { downloadToFile } = require("../utils/downloader");
 
 const router = express.Router();
 
-
-
 // --- health pings (added by script) ---
 router.get("/ping", (req, res) => {
   return res.json({ ok: true, pong: true, t: Date.now() });
@@ -33,4 +31,3 @@ router.post("/", async (req, res) => {
 module.exports = router;
 
 router.get("/_ping", (req, res) => res.json({ ok: true, router: "download" }));
-
