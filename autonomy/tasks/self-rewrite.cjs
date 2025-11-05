@@ -190,6 +190,15 @@ module.exports = {
     ok: true,
     note: `self-rewrite: commit skipped (git refused). branch=${head} staged=[${stagedTail}] msg="${msg}" err=${(e && e.message) || e}`
   };
+}));
+  const stagedFiles = (await textOut(runExec(exec, "git", ["diff", "--cached", "--name-only"], { cwd })))
+    .split(/\r?\n/)
+    .filter(Boolean);
+  const stagedTail = stagedFiles.slice(0, 5).join(", ") || "none";
+  return {
+    ok: true,
+    note: `self-rewrite: commit skipped (git refused). branch=${head} staged=[${stagedTail}] msg="${msg}" err=${(e && e.message) || e}`
+  };
 }),
       );
       const stagedFiles = (
@@ -207,4 +216,5 @@ module.exports = {
     }
   },
 };
+
 
