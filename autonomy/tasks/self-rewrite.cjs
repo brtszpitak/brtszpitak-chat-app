@@ -1,179 +1,109 @@
-﻿const path = require('path');
-const fs = require('fs');
-const git = require('../lib/git.cjs');
+﻿const path = require("path");
+const fs = require("fs");
+const git = require("../lib/git.cjs");
 
-// ---------- helpers ----------
+// helpers
 function shellJoin(cmd, args = []) {
   const q = (s) => `"${String(s).replace(/"/g, '\\"')}"`;
-  return [cmd, ...args.map(q)].join(' ');
-}
-async function textOut(promise) {
-  const r = await promise;
-  return String(r && r.stdout ? r.stdout : r).trim();
+  return [cmd, ...args.map(q)].join(" ");
 }
 async function runExec(execFn, cmd, args, opts) {
   if (Array.isArray(args)) return execFn(shellJoin(cmd, args), opts);
   return execFn(cmd, args);
 }
+async function textOut(promise) {
+  const r = await promise;
+  return String(r && r.stdout ? r.stdout : r).trim();
+}
 async function hasWorkingChanges(execFn, cwd) {
   try {
-    const s = await textOut(
-      runExec(execFn, 'git', ['status', '--porcelain'], { cwd }),
-    );
+    const s = await textOut(runExec(execFn, "git", ["status", "--porcelain"], { cwd }));
     return s.length > 0;
-  } catch {
-    return true;
-  }
+  } catch { return true; }
 }
 async function hasStagedChanges(execFn, cwd) {
-  const s = await textOut(
-    runExec(execFn, 'git', ['diff', '--cached', '--name-only'], { cwd }),
-  );
+  const s = await textOut(runExec(execFn, "git", ["diff", "--cached", "--name-only"], { cwd }));
   return s.length > 0;
 }
 async function ensureLocalIdentity(execFn, cwd) {
   try {
-    const name = await textOut(
-      runExec(execFn, 'git', ['config', '--get', 'user.name'], { cwd }),
-    );
-    const email = await textOut(
-      runExec(execFn, 'git', ['config', '--get', 'user.email'], { cwd }),
-    );
-    if (!name)
-      await runExec(execFn, 'git', ['config', 'user.name', 'Alice Bot'], {
-        cwd,
-      });
-    if (!email)
-      await runExec(
-        execFn,
-        'git',
-        ['config', 'user.email', 'alice@example.local'],
-        { cwd },
-      );
-  } catch {
-    /* ignore */
-  }
+    const name = await textOut(runExec(execFn, "git", ["config", "--get", "user.name"], { cwd }));
+    const email = await textOut(runExec(execFn, "git", ["config", "--get", "user.email"], { cwd }));
+    if (!name) await runExec(execFn, "git", ["config", "user.name", "Alice Bot"], { cwd });
+    if (!email) await runExec(execFn, "git", ["config", "user.email", "alice@example.local"], { cwd });
+  } catch {}
 }
 
-// ---------- task ----------
 module.exports = {
-  name: 'self-rewrite',
+  name: "self-rewrite",
   run: async ({ exec, proposeDiff, datetime }) => {
     const cwd = process.cwd();
+    const ALLOW = ["server/","client/","autonomy/","package.json","package-lock.json"];
 
-    // Ask for edits (guarded). If none available, use empty plan.
-    if (typeof proposeDiff !== 'function') {
+    // Ask for edits (guarded). Safe fallback if not provided.
+    if (typeof proposeDiff !== "function") {
       proposeDiff = async () => ({ ok: true, edits: [] });
     }
-    const ALLOW = [
-      'server/',
-      'client/',
-      'autonomy/',
-      'package.json',
-      'package-lock.json',
-    ];
-    const plan = await proposeDiff({
-      goals: ['improve reliability', 'reduce warnings', 'enhance logs'],
-      hard_guards: {
-        path_allowlist: ALLOW,
-        max_files: 10,
-        max_total_change_bytes: 120000,
-      },
-    });
-
-    // Apply up to 10 guarded edits
     let applied = 0;
-    for (const e of (plan && plan.edits) || []) {
-      const rel = String(e.path || '').replace(/\\/g, '/');
-      if (!ALLOW.some((a) => rel === a || rel.startsWith(a))) continue;
-
-      const abs = path.resolve(cwd, e.path);
-      const before = fs.existsSync(abs) ? fs.readFileSync(abs, 'utf8') : '';
-      const after = typeof e.apply === 'function' ? e.apply(before) : before;
-
-      fs.mkdirSync(path.dirname(abs), { recursive: true });
-      fs.writeFileSync(abs, after, 'utf8');
-
-      applied += 1;
-      if (applied >= 10) break;
-    }
-
-    // Format (best-effort)
     try {
-      await runExec(exec, 'npx', ['prettier', '--write', '.'], { cwd });
-    } catch {
+      const plan = await proposeDiff({
+        goals: ["improve reliability", "reduce warnings", "enhance logs"],
+        hard_guards: { path_allowlist: ALLOW, max_files: 10, max_total_change_bytes: 120000 },
+      });
+      for (const e of (plan && plan.edits) || []) {
+        const rel = String(e.path || "").replace(/\\/g, "/");
+        if (!ALLOW.some((a) => rel === a || rel.startsWith(a))) continue;
+        const abs = path.resolve(cwd, e.path);
+        const before = fs.existsSync(abs) ? fs.readFileSync(abs, "utf8") : "";
+        const after  = typeof e.apply === "function" ? e.apply(before) : before;
+        fs.mkdirSync(path.dirname(abs), { recursive: true });
+        fs.writeFileSync(abs, after, "utf8");
+        applied += 1;
+        if (applied >= 10) break;
+      }
+    } catch {}
+
+    // Best-effort format/lint/build (never fail pipeline)
+    try { await runExec(exec, "npx", ["prettier", "--write", "."], { cwd }); } catch {
       try {
-        const bin = path.resolve(
-          cwd,
-          'node_modules',
-          '.bin',
-          process.platform === 'win32' ? 'prettier.cmd' : 'prettier',
-        );
-        await runExec(exec, bin, ['--write', '.'], { cwd });
+        const bin = path.resolve(cwd, "node_modules", ".bin", process.platform === "win32" ? "prettier.cmd" : "prettier");
+        await runExec(exec, bin, ["--write", "."], { cwd });
       } catch {}
     }
+    try { await runExec(exec, "npm", ["run", "lint", "--", "--max-warnings=0"], { cwd }); } catch {}
+    try { await runExec(exec, "npm", ["run", "build"], { cwd: path.resolve(cwd, "client") }); } catch {}
 
-    // Lint (best-effort)
-    try {
-      await runExec(exec, 'npm', ['run', 'lint', '--', '--max-warnings=0'], {
-        cwd,
-      });
-    } catch {}
-
-    // Build client (best-effort)
-    try {
-      await runExec(exec, 'npm', ['run', 'build'], {
-        cwd: path.resolve(cwd, 'client'),
-      });
-    } catch {}
-
-    // If nothing changed, skip branch/commit
-    const workingChanged = await hasWorkingChanges(exec, cwd);
-    if (!workingChanged) {
-      return {
-        ok: true,
-        note: 'self-rewrite: no changes; repo clean (skipped branch/commit)',
-      };
+    // Skip if nothing actually changed
+    if (!(await hasWorkingChanges(exec, cwd))) {
+      return { ok: true, note: "self-rewrite: no changes; repo clean (skipped branch/commit)" };
     }
 
-    // Fresh topic branch
+    // Fresh branch only now
     await git.assertClean();
-    const branch =
-      'autonomy/rewrite-' + datetime().toISOString().replace(/[:.]/g, '-');
+    const branch = "autonomy/rewrite-" + datetime().toISOString().replace(/[:.]/g, "-");
     await git.checkoutNew(branch);
 
-    // Stage all
-    await runExec(exec, 'git', ['add', '-A'], { cwd });
-    const staged = await hasStagedChanges(exec, cwd);
-    const msg = `self-rewrite: ${applied} edits`;
-
-    if (!staged) {
-      return {
-        ok: true,
-        note: `self-rewrite: nothing staged after add; skipping commit on ${branch}`,
-      };
+    await runExec(exec, "git", ["add", "-A"], { cwd });
+    if (!(await hasStagedChanges(exec, cwd))) {
+      return { ok: true, note: `self-rewrite: nothing staged after add; skipping commit on ${branch}` };
     }
 
     await ensureLocalIdentity(exec, cwd);
-
+    const msg = `self-rewrite: ${applied} edits`;
     try {
-      await runExec(exec, 'git', ['commit', '-m', msg], { cwd });
+      await runExec(exec, "git", ["commit", "-m", msg], { cwd });
       return { ok: true, note: `self-rewrite committed (${msg}) on ${branch}` };
     } catch (e) {
-      const head = await textOut(
-        runExec(exec, 'git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd }),
-      );
-      const stagedFiles = (
-        await textOut(
-          runExec(exec, 'git', ['diff', '--cached', '--name-only'], { cwd }),
-        )
-      )
-        .split(/\r?\n/)
-        .filter(Boolean);
-      const stagedTail = stagedFiles.slice(0, 5).join(', ') || 'none';
+      const head = await textOut(runExec(exec, "git", ["rev-parse", "--abbrev-ref", "HEAD"], { cwd }));
+      const stagedText = await textOut(runExec(exec, "git", ["diff", "--cached", "--name-only"], { cwd }));
+      const stagedArr  = stagedText.split(/\r?\n/).filter(Boolean);
+      const stagedTailStr = (stagedArr.slice(0, 5)).join(", ") || "none";
+      // Force plain strings to avoid [object Object]
+      const errStr = (e && (e.stderr || e.message)) ? String(e.stderr || e.message) : String(e);
       return {
         ok: true,
-        note: `self-rewrite: commit skipped (git refused). branch=${head} staged=[${stagedTail}] msg="${msg}" err=${(e && e.message) || e}`,
+        note: "self-rewrite: commit skipped (git refused). branch=" + String(head)
+            + " staged=[" + String(stagedTailStr) + "] msg=\"" + String(msg) + "\" err=" + errStr
       };
     }
   },
