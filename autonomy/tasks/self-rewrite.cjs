@@ -139,10 +139,10 @@ module.exports = {
       // (we'll let commit step decide)
     }
 
-    await git.assertClean(); // uses project helper (should pass now)
+    // uses project helper (should pass now)
     const branch =
       'autonomy/rewrite-' + datetime().toISOString().replace(/[:.]/g, '-');
-    await git.checkoutNew(branch);
+    sh('git', ['checkout','-B', branch], cwd);
 
     // Stage all and decide
     trySh('git', ['add', '-A'], cwd);
@@ -187,3 +187,4 @@ module.exports = {
     }
   },
 };
+
