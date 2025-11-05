@@ -97,7 +97,7 @@ module.exports = {
       } catch (e) {
         // Graceful degrade: don't fail the task if commit rejects; include mini-diagnostic
         const head = await textOut(runExec(exec, "git", ["rev-parse", "--abbrev-ref", "HEAD"], { cwd }));
-        const stagedTail = staged.split(/\r?\n/).slice(0,5).join(", ");
+        const stagedNow = await (async () => {  try { return await textOut(runExec(exec, "git", ["diff","--cached","--name-only"], { cwd })); } catch { return ""; }})();const stagedTail = String(stagedNow).split(/\r?\n/).filter(Boolean).slice(0,5).join(", ");
         return {
           ok: true,
           note: `self-rewrite: commit skipped (git refused). branch=${head} staged=[${stagedTail}] msg="${msg}"`
@@ -108,3 +108,4 @@ module.exports = {
     }
   },
 };
+
