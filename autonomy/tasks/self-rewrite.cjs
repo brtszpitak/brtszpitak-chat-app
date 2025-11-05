@@ -142,7 +142,7 @@ module.exports = {
     // uses project helper (should pass now)
     const branch =
       'autonomy/rewrite-' + datetime().toISOString().replace(/[:.]/g, '-');
-    sh('git', ['checkout','-B', branch], cwd);
+    sh('git', ['checkout', '-B', branch], cwd);
 
     // Stage all and decide
     trySh('git', ['add', '-A'], cwd);
@@ -187,4 +187,3 @@ module.exports = {
     }
   },
 };
-
