@@ -1,0 +1,25 @@
+﻿diff --git a/autonomy/tasks/smoke-endpoints.cjs b/autonomy/tasks/smoke-endpoints.cjs
+--- a/autonomy/tasks/smoke-endpoints.cjs
++++ b/autonomy/tasks/smoke-endpoints.cjs
+@@
+ module.exports = {
+   name: "smoke-endpoints",
+-  run: async ({ exec }) => {
++  run: async ({ exec }) => {
++    // Use curl with --no-keepalive (prevents stale socket reuse), retry once on failure.
++    async function ping(url) {
++      try {
++        await exec("curl", ["--silent","--show-error","--fail","--no-keepalive", url]);
++      } catch (e) {
++        // Retry once for transient ECONNRESET
++        await new Promise(r=>setTimeout(r, 200));
++        await exec("curl", ["--silent","--show-error","--fail","--no-keepalive", url]);
++      }
++    }
+-    await exec("curl http://127.0.0.1:3001/health");
+-    await exec("curl http://127.0.0.1:3001/download/ping");
++    await ping("http://127.0.0.1:3001/health");
++    await ping("http://127.0.0.1:3001/download/ping");
+     return { ok: true, note: "Health + download ping ok" };
+   },
+ };
