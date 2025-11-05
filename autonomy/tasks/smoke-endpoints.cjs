@@ -1,13 +1,14 @@
 ﻿module.exports = {
   name: "smoke-endpoints",
   run: async ({ exec }) => {
-    // Curl helper: disable keep-alive to avoid stale sockets; retry once on transient failures.
     async function ping(url) {
+      const cmd = `curl --silent --show-error --fail --no-keepalive "${url}"`;
       try {
-        await exec("curl", ["--silent","--show-error","--fail","--no-keepalive", url]);
+        await exec(cmd);
       } catch (e) {
+        // retry once for transient network hiccups
         await new Promise(r => setTimeout(r, 200));
-        await exec("curl", ["--silent","--show-error","--fail","--no-keepalive", url]);
+        await exec(cmd);
       }
     }
 
