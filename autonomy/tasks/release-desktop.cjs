@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 const fs = require('fs'),
   cp = require('child_process');
 function shOut(c) {
@@ -24,7 +24,7 @@ try {
     run('node autonomy/tasks/build-desktop.cjs');
   }
 
-  const note = `Release ${next} — desktop build + learn cycle\n`;
+  const note = `Release ${next} â€” desktop build + learn cycle\n`;
   fs.appendFileSync('docs/NEXT_PHASE_LOG.md', note);
   try {
     run('git add docs/NEXT_PHASE_LOG.md');
@@ -61,3 +61,4 @@ try {
   console.error(JSON.stringify({ ok: false, err: String(e) }));
   process.exit(0);
 }
+
