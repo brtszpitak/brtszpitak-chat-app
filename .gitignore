@@ -35,3 +35,28 @@ _smoke_retry.patch
 *.patch
 
 autonomy/tasks/*.broken-*
+# --- Autonomy & runtime noise ---
+logs/
+log/
+*.log
+server/state.json
+client/dist/
+desktop/dist/
+dist/
+build/
+out/
+downloads/
+releases/
+.tmp/
+temp/
+tmp/
+.cache/
+.parcel-cache/
+.next/
+coverage/
+node_modules/
+*.pid
+*.tmp
+.DS_Store
+Thumbs.db
+autonomy_heartbeat.txt
