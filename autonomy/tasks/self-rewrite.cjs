@@ -181,8 +181,16 @@ module.exports = {
       await runExec(exec, 'git', ['commit', '-m', msg], { cwd });
       return { ok: true, note: `self-rewrite committed (${msg}) on ${branch}` };
     } catch (e) {
-      const head = await textOut(
-        runExec(exec, 'git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd }),
+  const head = await textOut(runExec(exec, "git", ["rev-parse", "--abbrev-ref", "HEAD"], { cwd }));
+  const stagedFiles = (await textOut(runExec(exec, "git", ["diff", "--cached", "--name-only"], { cwd })))
+    .split(/\r?\n/)
+    .filter(Boolean);
+  const stagedTail = stagedFiles.slice(0, 5).join(", ") || "none";
+  return {
+    ok: true,
+    note: `self-rewrite: commit skipped (git refused). branch=${head} staged=[${stagedTail}] msg="${msg}" err=${(e && e.message) || e}`
+  };
+}),
       );
       const stagedFiles = (
         await textOut(
@@ -199,3 +207,4 @@ module.exports = {
     }
   },
 };
+
